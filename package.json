@@ -1,0 +1,33 @@
+{
+  "name": "grunt-buster",
+  "description": "Grunt task for running Buster.JS tests",
+  "version": "0.1.0",
+  "homepage": "https://github.com/thedersen/grunt-buster",
+  "author": {
+    "name": "Thomas Pedersen",
+    "url": "http://thedersen.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/thedersen/grunt-buster.git"
+  },
+  "bugs": {
+    "url": "https://github.com/thedersen/grunt-buster/issues"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://thedersen.mit-license.org/"
+    }
+  ],
+  "main": "./tasks/buster.js",
+  "dependencies": {
+    "when": "~1.3.0"
+  },
+  "optionalDependencies": {
+    "growl": "~1"
+  },
+  "keywords": [
+    "gruntplugin"
+  ]
+}
