@@ -21,6 +21,7 @@ module.exports = function(grunt) {
           url = 'http://localhost:' + port + '/capture';
       return [__dirname + '/buster/phantom.js', url];
     }
+
     var args = [],
         config = getConfigSection(cmd);
 
@@ -47,65 +48,35 @@ module.exports = function(grunt) {
     }
   };
 
-  grunt.registerTask('buster', 'Run Buster.JS tests. Make sure you have started buster server first.', function() {
-    var done = this.async();
-    var stop = function(success, server, phantomjs){
-      if(server){
-        server.kill();
-        grunt.verbose.writeln('buster-server stopped');
-      }
-      if(phantomjs){
-        phantomjs.kill();
-        grunt.verbose.writeln('phantomjs stopped');
-      }
-      done(success);
-    };
+  var busterNotFound = function(){
+    grunt.log.errorlns(
+          'In order for this task to work properly, Buster.JS must be ' +
+          'installed and in the system PATH (if you can run "buster" at' +
+          'the command line, this task should work).' +
+          'To install Buster.JS, run `npm install -g buster`.'
+        );
+  };
 
-    if(shouldRunServer()){
-      grunt.helper('buster-server').then(
-        function(server){
-          grunt.helper('buster-phantomjs').then(
-            function(phantomjs){
-              grunt.helper('buster-test').then(
-                function(){
-                  stop(null, server, phantomjs);
-                },
-                function(){
-                  stop(false, server, phantomjs);
-                }
-              );
-            },
-            function(phantomjs) {
-              stop(false, server, phantomjs);
-            }
-          );
-        },
-        function(server){
-          stop(false, server);
-        }
-      );
-    }
-    else {
-      grunt.helper('buster-test').then(
-        function(){
-          done(null);
-        },
-        function(){
-          done(false);
-        });
-    }
-  });
+  var phantomjsNotFound = function(){
+    grunt.log.errorlns(
+          'In order for this task to work properly, PhantomJS must be ' +
+          'installed and in the system PATH (if you can run "phantomjs" at' +
+          'the command line, this task should work). Unfortunately, ' +
+          'PhantomJS cannot be installed automatically via npm or grunt. ' +
+          'See the grunt FAQ for PhantomJS installation instructions: ' +
+          'https://github.com/cowboy/grunt/blob/master/docs/faq.md'
+        );
+  };
 
-  grunt.registerHelper('buster-server', function(){
+  var runBusterServer = function(){
     var deferred = when.defer();
     childProcess.exec('command -v buster-server', { env: process.env }, function(error, stdout, stderr) {
       if (error) {
-        grunt.log.writeln('Unknown error occurred when running Buster.JS'.red);
+        busterNotFound();
         deferred.reject();
       }
       else {
         var mod = stdout.split('\n')[0];
-
         var server = childProcess.spawn(mod, getArguments('server'), {
           env: process.env,
           setsid: true
@@ -124,13 +95,13 @@ module.exports = function(grunt) {
     });
 
     return deferred.promise;
-  });
+  };
 
-  grunt.registerHelper('buster-test', function(){
+  var runBusterTest = function(){
     var deferred = when.defer();
     childProcess.exec('command -v buster-test', { env: process.env }, function(error, stdout, stderr) {
       if (error) {
-        grunt.log.writeln('Unknown error occurred when running Buster.JS'.red);
+        busterNotFound();
         deferred.reject();
       }
       else {
@@ -173,20 +144,13 @@ module.exports = function(grunt) {
       }
     });
     return deferred.promise;
-  });
+  };
 
-  grunt.registerHelper('buster-phantomjs', function() {
+  var runPhantomjs = function() {
       var deferred = when.defer();
       childProcess.exec('command -v phantomjs', { env: process.env }, function(error, stdout, stderr) {
       if (error) {
-        grunt.log.errorlns(
-          'In order for this task to work properly, PhantomJS must be ' +
-          'installed and in the system PATH (if you can run "phantomjs" at' +
-          'the command line, this task should work). Unfortunately, ' +
-          'PhantomJS cannot be installed automatically via npm or grunt. ' +
-          'See the grunt FAQ for PhantomJS installation instructions: ' +
-          'https://github.com/cowboy/grunt/blob/master/docs/faq.md'
-        );
+        phantomjsNotFound();
         deferred.reject();
       }
       else {
@@ -210,5 +174,54 @@ module.exports = function(grunt) {
     });
 
     return deferred.promise;
+  };
+
+    grunt.registerTask('buster', 'Run Buster.JS tests.', function() {
+    var done = this.async();
+    var stop = function(success, server, phantomjs){
+      if(server){
+        server.kill();
+        grunt.verbose.writeln('buster-server stopped');
+      }
+      if(phantomjs){
+        phantomjs.kill();
+        grunt.verbose.writeln('phantomjs stopped');
+      }
+      done(success);
+    };
+
+    if(shouldRunServer()){
+      runBusterServer().then(
+        function(server){
+          runPhantomjs().then(
+            function(phantomjs){
+              runBusterTest().then(
+                function(){
+                  stop(null, server, phantomjs);
+                },
+                function(){
+                  stop(false, server, phantomjs);
+                }
+              );
+            },
+            function(phantomjs) {
+              stop(false, server, phantomjs);
+            }
+          );
+        },
+        function(server){
+          stop(false, server);
+        }
+      );
+    }
+    else {
+      runBusterTest().then(
+        function(){
+          done(null);
+        },
+        function(){
+          done(false);
+        });
+    }
   });
 };
