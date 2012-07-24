@@ -42,11 +42,11 @@ This is entierly optional, and buster will use default values if none is specifi
 
 For available options for buster test run:
 
-  buster test --help
+    buster test --help
 
 For available options for buster server run:
 
-  buster server --help
+    buster server --help
 
 ### Growl
 
