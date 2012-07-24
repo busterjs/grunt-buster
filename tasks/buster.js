@@ -1,5 +1,6 @@
 module.exports = function(grunt) {
   var childProcess = require('child_process'),
+      path = require('path'),
       when = require('when'),
       growl;
 
@@ -35,6 +36,17 @@ module.exports = function(grunt) {
     return args;
   };
 
+  var shouldRunServer = function(){
+    var configFile = getConfigSection('test').config || 'buster.js',
+        configs = require(path.join(process.cwd(), configFile));
+
+    for(var config in configs){
+      if((configs[config].environment || configs[config].env) === 'browser'){
+        return true;
+      }
+    }
+  };
+
   grunt.registerTask('buster', 'Run Buster.JS tests. Make sure you have started buster server first.', function() {
     var done = this.async();
     var stop = function(success, server, phantomjs){
@@ -49,28 +61,39 @@ module.exports = function(grunt) {
       done(success);
     };
 
-    grunt.helper('buster-server').then(
-      function(server){
-        grunt.helper('phantomjs').then(
-          function(phantomjs){
-            grunt.helper('buster-test').then(
-              function(){
-                stop(null, server, phantomjs);
-              },
-              function(){
-                stop(false, server, phantomjs);
-              }
-            );
-          },
-          function(phantomjs) {
-            stop(false, server, phantomjs);
-          }
-        );
-      },
-      function(server){
-        stop(false, server);
-      }
-    );
+    if(shouldRunServer()){
+      grunt.helper('buster-server').then(
+        function(server){
+          grunt.helper('buster-phantomjs').then(
+            function(phantomjs){
+              grunt.helper('buster-test').then(
+                function(){
+                  stop(null, server, phantomjs);
+                },
+                function(){
+                  stop(false, server, phantomjs);
+                }
+              );
+            },
+            function(phantomjs) {
+              stop(false, server, phantomjs);
+            }
+          );
+        },
+        function(server){
+          stop(false, server);
+        }
+      );
+    }
+    else {
+      grunt.helper('buster-test').then(
+        function(){
+          done(null);
+        },
+        function(){
+          done(false);
+        });
+    }
   });
 
   grunt.registerHelper('buster-server', function(){
@@ -152,7 +175,7 @@ module.exports = function(grunt) {
     return deferred.promise;
   });
 
-  grunt.registerHelper('phantomjs', function() {
+  grunt.registerHelper('buster-phantomjs', function() {
       var deferred = when.defer();
       childProcess.exec('command -v phantomjs', { env: process.env }, function(error, stdout, stderr) {
       if (error) {
