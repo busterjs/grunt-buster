@@ -128,7 +128,10 @@ module.exports = function(grunt) {
         });
 
         run.on('exit', function(code) {
-          var text = output[output.length - 2].toString().split(', ').join('\n') + output[output.length - 1];
+          var text = '';
+          if(output[output.length - 2]){
+            text = output[output.length - 2].toString().split(', ').join('\n') + output[output.length - 1];
+          }
           if(code === 0){
             growl(text, {
               title: 'Tests Passed',
