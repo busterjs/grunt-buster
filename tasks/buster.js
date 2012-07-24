@@ -147,8 +147,8 @@ module.exports = function(grunt) {
   };
 
   var runPhantomjs = function() {
-      var deferred = when.defer();
-      childProcess.exec('command -v phantomjs', { env: process.env }, function(error, stdout, stderr) {
+    var deferred = when.defer();
+    childProcess.exec('command -v phantomjs', { env: process.env }, function(error, stdout, stderr) {
       if (error) {
         phantomjsNotFound();
         deferred.reject();
@@ -176,7 +176,7 @@ module.exports = function(grunt) {
     return deferred.promise;
   };
 
-    grunt.registerTask('buster', 'Run Buster.JS tests.', function() {
+  grunt.registerTask('buster', 'Run Buster.JS tests.', function() {
     var done = this.async();
     var stop = function(success, server, phantomjs){
       if(server){
@@ -221,7 +221,8 @@ module.exports = function(grunt) {
         },
         function(){
           done(false);
-        });
+        }
+      );
     }
   });
 };
