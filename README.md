@@ -1,24 +1,27 @@
 # grunt-buster v0.1.0
 
-[Grunt](https://github.com/cowboy/grunt) plugin for running [Buster.JS](http://busterjs.org/) tests in a headless browser, [PhantomJS](http://phantomjs.org/).
+[Grunt](https://github.com/cowboy/grunt) plugin for running [Buster.JS](http://busterjs.org/) tests in [Node.js](http://nodejs.org/) or headless in [PhantomJS](http://phantomjs.org/).
 
 ## Getting Started
 
-Install the plugin via npm:
+First, you must install buster globally:
 
-  `npm install grunt-buster`
+    npm install -g buster
 
-Then add this line to your project's `grunt.js` gruntfile at the bottom:
+Then install the plugin via npm:
+
+    npm install grunt-buster
+
+Finally add this line to your project's `grunt.js` gruntfile at the bottom:
 
 ```js
 grunt.loadNpmTasks('grunt-buster');
 ```
-
-Now you can run the buster task with `grunt buster`, but it probably won't work. That's because you need...
+Now you can run the buster task with `grunt buster`.
 
 ### PhantomJS
 
-This task is for running Buster.JS tests in a headless browser, PhantomJS. [See the FAQ on how to install PhantomJS](https://github.com/cowboy/grunt/blob/master/docs/faq.md#why-does-grunt-complain-that-phantomjs-isnt-installed).
+If you want to run tests for the browser environment, you also need to install PhantomJS. [See this FAQ on how to install PhantomJS](https://github.com/cowboy/grunt/blob/master/docs/faq.md#why-does-grunt-complain-that-phantomjs-isnt-installed).
 
 ### Configuration
 
