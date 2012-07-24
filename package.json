@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/thedersen/grunt-buster.git"
+    "url": "http://github.com/thedersen/grunt-buster.git"
   },
   "bugs": {
     "url": "https://github.com/thedersen/grunt-buster/issues"
@@ -28,6 +28,9 @@
     "growl": "~1"
   },
   "keywords": [
-    "gruntplugin"
+    "gruntplugin",
+    "grunt",
+    "buster",
+    "buster.js"
   ]
 }
