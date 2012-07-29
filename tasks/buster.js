@@ -82,14 +82,20 @@ module.exports = function(grunt) {
           setsid: true
         });
 
+        server.stdout.once('data', function(data) {
+          deferred.resolve(server);
+        });
+
+        server.stderr.once('data', function(data) {
+          deferred.reject(server);
+        });
+
         server.stdout.on('data', function(data) {
           process.stdout.write(data);
-          deferred.resolve(server);
         });
 
         server.stderr.on('data', function(data) {
           process.stderr.write(data);
-          deferred.reject(server);
         });
       }
     });
