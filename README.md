@@ -1,4 +1,4 @@
-# grunt-buster v0.1.0
+# grunt-buster v0.1.1
 
 [Grunt](https://github.com/cowboy/grunt) plugin for running [Buster.JS](http://busterjs.org/) tests in [Node.js](http://nodejs.org/) or headless in [PhantomJS](http://phantomjs.org/).
 
@@ -54,6 +54,14 @@ For available options for buster server run:
 ### Growl
 
 Growl support is optional, but if you would like to use it follow the instructions on how to install it on [this site](https://github.com/visionmedia/node-growl).
+
+## Release notes
+
+#### v0.1.1
+* Ensure that tests is not run until PhantomJS finished starting (thanks to [Harrison](https://github.com/Harrison))
+
+#### v0.1.0
+* Initial release
 
 ## License
 http://thedersen.mit-license.org/
