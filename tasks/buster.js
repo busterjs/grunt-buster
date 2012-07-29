@@ -169,7 +169,9 @@ module.exports = function(grunt) {
           grunt.verbose.writeln(data);
         });
 
-        deferred.resolve(server);
+        server.stdout.once('data', function() {
+          deferred.resolve(server);
+        });
       }
     });
 
