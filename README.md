@@ -2,8 +2,6 @@
 
 [Grunt](https://github.com/cowboy/grunt) plugin for running [Buster.JS](http://busterjs.org/) tests in [Node.js](http://nodejs.org/) or headless in [PhantomJS](http://phantomjs.org/).
 
-<iframe class="github-btn" src="http://markdotto.github.com/github-buttons/github-btn.html?user=thedersen&repo=grunt-buster&type=watch&count=true" allowtransparency="true" frameborder="0" scrolling="0" width="112px" height="20px"></iframe>
-<iframe class="github-btn" src="http://markdotto.github.com/github-buttons/github-btn.html?user=thedersen&repo=grunt-buster&type=fork&count=true" allowtransparency="true" frameborder="0" scrolling="0" width="112px" height="20px"></iframe>
 
 ## Getting Started
 
