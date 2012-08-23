@@ -1,3 +1,4 @@
+[![build status](https://secure.travis-ci.org/thedersen/grunt-buster.png)](http://travis-ci.org/thedersen/grunt-buster)
 # grunt-buster v0.1.1
 
 [Grunt](https://github.com/cowboy/grunt) plugin for running [Buster.JS](http://busterjs.org/) tests in [Node.js](http://nodejs.org/) or headless in [PhantomJS](http://phantomjs.org/).
