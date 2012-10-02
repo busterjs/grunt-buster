@@ -132,6 +132,7 @@ module.exports = function(grunt) {
           if(output[output.length - 2]){
             text = output[output.length - 2].toString().split(', ').join('\n') + output[output.length - 1];
           }
+          text = text.replace(/\u001b\[.*m/g, '').trim();
           if(code === 0){
             growl(text, {
               title: 'Tests Passed',
