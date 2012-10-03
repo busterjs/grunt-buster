@@ -38,8 +38,22 @@ module.exports = function(grunt) {
   };
 
   var shouldRunServer = function(){
-    var configFile = getConfigSection('test').config || 'buster.js',
-        configs = require(path.join(process.cwd(), configFile));
+    var configFile = getConfigSection('test').config;
+    if(!configFile){
+      grunt.verbose.writeln('No buster configuration specified. Looking for buster.js...');
+
+      if(path.existsSync('buster.js')) {
+        configFile = 'buster.js';
+        grunt.verbose.writeln('Found buster.js');
+      } else if(path.existsSync('test/buster.js')) {
+        configFile = 'test/buster.js';
+        grunt.verbose.writeln('Found test/buster.js');
+      } else if(path.existsSync('spec/buster.js')) {
+        configFile = 'spec/buster.js';
+        grunt.verbose.writeln('Found spec/buster.js');
+      }
+    }
+    var configs = require(path.join(process.cwd(), configFile));
 
     for(var config in configs){
       if((configs[config].environment || configs[config].env) === 'browser'){
