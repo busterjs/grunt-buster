@@ -22,7 +22,7 @@ Now you can run the buster task with `grunt buster`.
 
 ### Browser Tests
 
-If you want to run tests for the browser environment, you also need to [install PhantomJS](https://github.com/cowboy/grunt/blob/master/docs/faq.md#why-does-grunt-complain-that-phantomjs-isnt-installed).
+If you want to run tests for the browser environment, you also need to [install PhantomJS](https://github.com/gruntjs/grunt/blob/master/docs/faq.md#why-does-grunt-complain-that-phantomjs-isnt-installed).
 
 ### Configuration
 
