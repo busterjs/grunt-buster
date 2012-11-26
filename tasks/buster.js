@@ -101,6 +101,7 @@ module.exports = function(grunt) {
         });
 
         server.stderr.once('data', function(data) {
+          grunt.log.error(data);
           deferred.reject(server);
         });
 
