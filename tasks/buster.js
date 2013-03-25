@@ -15,6 +15,23 @@ module.exports = function(grunt) {
     return (grunt.config('buster') || {})[cmd] || {};
   };
 
+  var getExecutable = function(cmd, cb) {
+    var cmdPath = path.join('node_modules', '.bin', cmd);
+    if (require('os').platform() === 'win32') {
+      cmdPath += '.cmd';
+    }
+    if (path.existsSync(cmdPath)) {
+      return cb(null, cmdPath);
+    }
+
+    childProcess.exec('command -v buster-server', { env: process.env }, function(error, stdout, stderr) {
+      if (error) {
+        return cb(error);
+      }
+      return cb(null, stdout.split('\n')[0]);
+    });
+  };
+
   var getArguments = function(cmd) {
     if(cmd === 'phantomjs'){
       var port = getConfigSection('server').port || 1111,
@@ -84,13 +101,12 @@ module.exports = function(grunt) {
 
   var runBusterServer = function(){
     var deferred = when.defer();
-    childProcess.exec('command -v buster-server', { env: process.env }, function(error, stdout, stderr) {
+    getExecutable('buster-server', function(error, mod) {
       if (error) {
         busterNotFound();
         deferred.reject();
       }
       else {
-        var mod = stdout.split('\n')[0];
         var server = childProcess.spawn(mod, getArguments('server'), {
           env: process.env,
           setsid: true
@@ -119,14 +135,13 @@ module.exports = function(grunt) {
 
   var runBusterTest = function(){
     var deferred = when.defer();
-    childProcess.exec('command -v buster-test', { env: process.env }, function(error, stdout, stderr) {
+    getExecutable('buster-test', function(error, mod) {
       if (error) {
         busterNotFound();
         deferred.reject();
       }
       else {
-        var output = [],
-            mod = stdout.split('\n')[0];
+        var output = [];
         var run = childProcess.spawn(mod, getArguments('test'), {
           env: process.env,
           setsid: true
@@ -169,14 +184,12 @@ module.exports = function(grunt) {
 
   var runPhantomjs = function() {
     var deferred = when.defer();
-    childProcess.exec('command -v phantomjs', { env: process.env }, function(error, stdout, stderr) {
+    getExecutable('phantomjs', function(error, mod) {
       if (error) {
         phantomjsNotFound();
         deferred.reject();
       }
       else {
-        var mod = stdout.split('\n')[0];
-
         var server = childProcess.spawn(mod, getArguments('phantomjs'), {
           env: process.env,
           setsid: true
