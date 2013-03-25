@@ -5,7 +5,9 @@
 
 ## Getting Started
 
-First, you must install buster globally:
+First, you must install buster either locally or globally:
+
+    npm install buster
 
     npm install -g buster
 
@@ -54,6 +56,10 @@ For available options for buster server run:
 Growl support is optional, but if you would like to use it follow the instructions on how to install it on [this site](https://github.com/visionmedia/node-growl).
 
 ## Release notes
+
+#### v0.1.3 (in progress?)
+* Prefer locally installed executables (`node_modules/.bin`)
+* Support for windows
 
 #### v0.1.2
 * Looks for buster.js in test/ and spec/ in addition to the root folder
