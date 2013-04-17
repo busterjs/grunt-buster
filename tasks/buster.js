@@ -2,6 +2,7 @@ module.exports = function(grunt) {
   var childProcess = require('child_process'),
       path = require('path'),
       when = require('when'),
+      phantomjs = require('phantomjs'),
       growl;
 
   try {
@@ -83,117 +84,94 @@ module.exports = function(grunt) {
   };
 
   var runBusterServer = function(){
-    var deferred = when.defer();
-    childProcess.exec('command -v buster-server', { env: process.env }, function(error, stdout, stderr) {
-      if (error) {
-        busterNotFound();
-        deferred.reject();
-      }
-      else {
-        var mod = stdout.split('\n')[0];
-        var server = childProcess.spawn(mod, getArguments('server'), {
-          env: process.env,
-          setsid: true
-        });
+    var deferred = when.defer(),
+        busterServerPath = path.resolve(__dirname, '../node_modules/.bin/buster-server');
 
-        server.stdout.once('data', function(data) {
-          deferred.resolve(server);
-        });
+    var server = childProcess.spawn(busterServerPath, getArguments('server'), {
+      env: process.env,
+      setsid: true
+    });
 
-        server.stderr.once('data', function(data) {
-          deferred.reject(server);
-        });
+    server.stdout.once('data', function(data) {
+      deferred.resolve(server);
+    });
 
-        server.stdout.on('data', function(data) {
-          process.stdout.write(data);
-        });
+    server.stderr.once('data', function(data) {
+      deferred.reject(server);
+    });
 
-        server.stderr.on('data', function(data) {
-          process.stderr.write(data);
-        });
-      }
+    server.stdout.on('data', function(data) {
+      process.stdout.write(data);
+    });
+
+    server.stderr.on('data', function(data) {
+      process.stderr.write(data);
     });
 
     return deferred.promise;
   };
 
   var runBusterTest = function(){
-    var deferred = when.defer();
-    childProcess.exec('command -v buster-test', { env: process.env }, function(error, stdout, stderr) {
-      if (error) {
-        busterNotFound();
-        deferred.reject();
+    var deferred = when.defer(),
+        busterTestPath = path.resolve(__dirname, '../node_modules/.bin/buster-test'),
+        output = [];
+
+    var run = childProcess.spawn(busterTestPath, getArguments('test'), {
+      env: process.env,
+      setsid: true
+    });
+
+    run.stdout.on('data', function(data) {
+      output.push(data);
+      process.stdout.write(data);
+    });
+
+    run.stderr.on('data', function(data) {
+      process.stderr.write(data);
+    });
+
+    run.on('exit', function(code) {
+      var text = '';
+      if(output[output.length - 2]){
+        text = output[output.length - 2].toString().split(', ').join('\n') + output[output.length - 1];
+      }
+      text = text.replace(/\u001b\[.*m/g, '').trim();
+      if(code === 0){
+        growl(text, {
+          title: 'Tests Passed',
+          image: __dirname + '/buster/ok.png'
+        });
+        deferred.resolve();
       }
       else {
-        var output = [],
-            mod = stdout.split('\n')[0];
-        var run = childProcess.spawn(mod, getArguments('test'), {
-          env: process.env,
-          setsid: true
+        growl(text, {
+          title: 'Tests Failed',
+          image: __dirname + '/buster/error.png'
         });
-
-        run.stdout.on('data', function(data) {
-          output.push(data);
-          process.stdout.write(data);
-        });
-
-        run.stderr.on('data', function(data) {
-          process.stderr.write(data);
-        });
-
-        run.on('exit', function(code) {
-          var text = '';
-          if(output[output.length - 2]){
-            text = output[output.length - 2].toString().split(', ').join('\n') + output[output.length - 1];
-          }
-          text = text.replace(/\u001b\[.*m/g, '').trim();
-          if(code === 0){
-            growl(text, {
-              title: 'Tests Passed',
-              image: __dirname + '/buster/ok.png'
-            });
-            deferred.resolve();
-          }
-          else {
-            growl(text, {
-              title: 'Tests Failed',
-              image: __dirname + '/buster/error.png'
-            });
-            deferred.reject();
-          }
-        });
+        deferred.reject();
       }
     });
+
     return deferred.promise;
   };
 
   var runPhantomjs = function() {
     var deferred = when.defer();
-    childProcess.exec('command -v phantomjs', { env: process.env }, function(error, stdout, stderr) {
-      if (error) {
-        phantomjsNotFound();
-        deferred.reject();
-      }
-      else {
-        var mod = stdout.split('\n')[0];
+    var server = childProcess.spawn(phantomjs.path, getArguments('phantomjs'), {
+      env: process.env,
+      setsid: true
+    });
 
-        var server = childProcess.spawn(mod, getArguments('phantomjs'), {
-          env: process.env,
-          setsid: true
-        });
+    server.stdout.on('data', function(data) {
+      grunt.verbose.writeln(data);
+    });
 
-        server.stdout.on('data', function(data) {
-          grunt.verbose.writeln(data);
-        });
+    server.stderr.on('data', function(data) {
+      grunt.verbose.writeln(data);
+    });
 
-        server.stderr.on('data', function(data) {
-          grunt.verbose.writeln(data);
-        });
-
-        server.stdout.once('data', function() {
-          deferred.resolve(server);
-        });
-      }
+    server.stdout.once('data', function() {
+      deferred.resolve(server);
     });
 
     return deferred.promise;
