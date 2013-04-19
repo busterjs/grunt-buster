@@ -63,26 +63,6 @@ module.exports = function (grunt) {
         }
     };
 
-    var busterNotFound = function () {
-        grunt.log.errorlns(
-            'In order for this task to work properly, Buster.JS must be ' +
-                'installed and in the system PATH (if you can run "buster" at' +
-                'the command line, this task should work).' +
-                'To install Buster.JS, run `npm install -g buster`.'
-        );
-    };
-
-    var phantomjsNotFound = function () {
-        grunt.log.errorlns(
-            'In order for this task to work properly, PhantomJS must be ' +
-                'installed and in the system PATH (if you can run "phantomjs" at' +
-                'the command line, this task should work). Unfortunately, ' +
-                'PhantomJS cannot be installed automatically via npm or grunt. ' +
-                'See the grunt FAQ for PhantomJS installation instructions: ' +
-                'https://github.com/cowboy/grunt/blob/master/docs/faq.md'
-        );
-    };
-
     var runBusterServer = function () {
         var deferred = when.defer(),
             busterServerPath = path.resolve(__dirname, '../node_modules/.bin/buster-server');
@@ -92,11 +72,11 @@ module.exports = function (grunt) {
             setsid: true
         });
 
-        server.stdout.once('data', function (data) {
+        server.stdout.once('data', function () {
             deferred.resolve(server);
         });
 
-        server.stderr.once('data', function (data) {
+        server.stderr.once('data', function () {
             deferred.reject(server);
         });
 
@@ -131,23 +111,9 @@ module.exports = function (grunt) {
         });
 
         run.on('exit', function (code) {
-            var text = '';
-            if (output[output.length - 2]) {
-                text = output[output.length - 2].toString().split(', ').join('\n') + output[output.length - 1];
-            }
-            text = text.replace(/\u001b\[.*m/g, '').trim();
             if (code === 0) {
-                growl(text, {
-                    title: 'Tests Passed',
-                    image: __dirname + '/buster/ok.png'
-                });
                 deferred.resolve();
-            }
-            else {
-                growl(text, {
-                    title: 'Tests Failed',
-                    image: __dirname + '/buster/error.png'
-                });
+            } else {
                 deferred.reject();
             }
         });
@@ -214,8 +180,7 @@ module.exports = function (grunt) {
                     stop(false, server);
                 }
             );
-        }
-        else {
+        } else {
             runBusterTest().then(
                 function () {
                     done(null);
