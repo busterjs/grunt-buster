@@ -100,6 +100,7 @@ module.exports = function (grunt) {
     var runBusterTest = function () {
         var deferred = when.defer(),
             busterTestPath = path.resolve(__dirname, '../node_modules/.bin/buster-test'),
+            output = getConfigSection('options').reportDest,
             xml;
 
         var run = childProcess.spawn(busterTestPath, getArguments('test'), {
@@ -108,7 +109,11 @@ module.exports = function (grunt) {
         });
 
         if (getConfigSection('test').reporter === 'xml') {
-            xml = fs.createWriteStream(getConfigSection('options').reportDest, {'flags': 'a'});
+            if (!fs.existsSync(output)) {
+                fs.mkdirSync(path.dirname(output));
+            }
+
+            xml = fs.createWriteStream(output, {'flags': 'a'});
         }
 
         run.stdout.on('data', function (data) {
