@@ -1,10 +1,14 @@
+String.prototype.toDash = function(){
+    return this.replace(/([A-Z])/g, function($1){return "-"+$1.toLowerCase();});
+};
+
 module.exports = function (grunt) {
     var childProcess = require('child_process'),
         path = require('path'),
         fs = require('fs'),
         when = require('when'),
         phantomjs = require('phantomjs'),
-        growl;
+        globalConfig;
 
     try {
         growl = require('growl');
@@ -14,7 +18,7 @@ module.exports = function (grunt) {
     }
 
     var getConfigSection = function (cmd) {
-        return (grunt.config('buster') || {})[cmd] || {};
+        return globalConfig[cmd] || {};
     };
 
     var getArguments = function (cmd) {
@@ -30,12 +34,13 @@ module.exports = function (grunt) {
         for (var arg in config) {
             var value = config[arg];
             if (value !== false) {
-                args.push('--' + arg);
+                args.push('--' + arg.toDash());
                 if (value !== true) {
                     args.push(value);
                 }
             }
         }
+
         return args;
     };
 
@@ -95,16 +100,25 @@ module.exports = function (grunt) {
     var runBusterTest = function () {
         var deferred = when.defer(),
             busterTestPath = path.resolve(__dirname, '../node_modules/.bin/buster-test'),
-            output = [];
+            xml;
 
         var run = childProcess.spawn(busterTestPath, getArguments('test'), {
             env: process.env,
             setsid: true
         });
 
+        if (getConfigSection('test').reporter === 'xml') {
+            xml = fs.createWriteStream(getConfigSection('options').reportDest, {'flags': 'a'});
+        }
+
         run.stdout.on('data', function (data) {
-            output.push(data);
-            process.stdout.write(data);
+            if (xml) {
+                var buffer = new Buffer(data);
+
+                return xml.write(buffer.toString());
+            }
+
+            return process.stdout.write(data);
         });
 
         run.stderr.on('data', function (data) {
@@ -112,6 +126,9 @@ module.exports = function (grunt) {
         });
 
         run.on('exit', function (code) {
+            if (xml) {
+                grunt.log.ok('Report written to file.')
+            }
             if (code === 0) {
                 deferred.resolve();
             } else {
@@ -144,7 +161,9 @@ module.exports = function (grunt) {
         return deferred.promise;
     };
 
-    grunt.registerTask('buster', 'Run Buster.JS tests.', function () {
+    grunt.registerMultiTask('buster', 'Run Buster.JS tests.', function () {
+        globalConfig = this.data;
+
         var done = this.async();
         var stop = function (success, server, phantomjs) {
             if (server) {
