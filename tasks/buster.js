@@ -109,11 +109,11 @@ module.exports = function (grunt) {
         });
 
         if (getConfigSection('test').reporter === 'xml') {
-            if (!fs.existsSync(output)) {
+            if (!fs.existsSync(path.dirname(output))) {
                 fs.mkdirSync(path.dirname(output));
             }
 
-            xml = fs.createWriteStream(output, {'flags': 'a'});
+            xml = fs.createWriteStream(output, {'flags': 'w'});
         }
 
         run.stdout.on('data', function (data) {
