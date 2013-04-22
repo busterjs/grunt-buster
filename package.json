@@ -1,18 +1,18 @@
 {
-  "name": "grunt-buster",
+  "name": "grunt-buster-plugin",
   "description": "Grunt task for running Buster.JS tests",
-  "version": "0.1.2",
-  "homepage": "https://github.com/thedersen/grunt-buster",
+  "version": "0.1.0",
+  "homepage": "https://github.com/sprzybylski/grunt-buster",
   "author": {
     "name": "Thomas Pedersen",
     "url": "http://thedersen.com"
   },
   "repository": {
     "type": "git",
-    "url": "http://github.com/thedersen/grunt-buster.git"
+    "url": "http://github.com/sprzybylski/grunt-buster.git"
   },
   "bugs": {
-    "url": "https://github.com/thedersen/grunt-buster/issues"
+    "url": "https://github.com/sprzybylski/grunt-buster/issues"
   },
   "licenses": [
     {
@@ -22,10 +22,9 @@
   ],
   "main": "./tasks/buster.js",
   "dependencies": {
-    "when": "~1.3.0"
-  },
-  "optionalDependencies": {
-    "growl": "~1"
+    "when": "~1.3.0",
+    "phantomjs": "~1.9.0-2",
+    "buster": "~0.6.12"
   },
   "keywords": [
     "gruntplugin",
