@@ -1,9 +1,10 @@
+/* global phantom: true, WebPage: true */
+
 var system = require('system'),
-    captureUrl = system.args[1];
+    captureUrl = system.args[1],
+    page = new WebPage();
 
 phantom.silent = false;
-
-var page = new WebPage();
 
 page.open(captureUrl, function (status) {
     if (!phantom.silent) {
@@ -14,19 +15,12 @@ page.open(captureUrl, function (status) {
 
         console.log('phantomjs capturing on ' + captureUrl);
 
-        page.onConsoleMessage = function (msg, line, id) {
-            var composedMsg = '';
-            var fileName = id ? id.split('/') : null;
-            // format the output message with filename, line number and message
-            // weird gotcha: phantom only uses the first console.log argument it gets :(
-            composedMsg = fileName ? fileName[fileName.length - 1] + ', ' : '';
-            composedMsg = line ? line + ': ' : '';
-            composedMsg = msg;
-            console.log(composedMsg);
+        page.onConsoleMessage = function (msg) {
+            console.info(msg);
         };
 
         page.onAlert = function (msg) {
-            console.log(msg);
+            console.error(msg);
         };
     }
 });

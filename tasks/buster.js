@@ -1,5 +1,7 @@
-String.prototype.toDash = function(){
-    return this.replace(/([A-Z])/g, function($1){return "-"+$1.toLowerCase();});
+String.prototype.toDash = function () {
+    return this.replace(/([A-Z])/g, function ($1) {
+        return '-' + $1.toLowerCase();
+    });
 };
 
 module.exports = function (grunt) {
@@ -8,31 +10,28 @@ module.exports = function (grunt) {
         fs = require('fs'),
         when = require('when'),
         phantomjs = require('phantomjs'),
-        globalConfig;
+        globalConfig, getConfigSection, getArguments, shouldRunServer,
+        runBusterServer, runBusterTest, runPhantomjs;
 
-    try {
-        growl = require('growl');
-    } catch (e) {
-        growl = Function.prototype;
-        grunt.verbose.writeln('Growl not found, `npm install growl` for Growl support'.yellow);
-    }
-
-    var getConfigSection = function (cmd) {
+    getConfigSection = function (cmd) {
         return globalConfig[cmd] || {};
     };
 
-    var getArguments = function (cmd) {
+    getArguments = function (cmd) {
+        var args = [],
+            config = getConfigSection(cmd),
+            port, url, arg, value;
+
         if (cmd === 'phantomjs') {
-            var port = getConfigSection('server').port || 1111,
-                url = 'http://localhost:' + port + '/capture';
+            port = getConfigSection('server').port || 1111;
+            url = 'http://localhost:' + port + '/capture';
+
             return [__dirname + '/buster/phantom.js', url];
         }
 
-        var args = [],
-            config = getConfigSection(cmd);
 
-        for (var arg in config) {
-            var value = config[arg];
+        for (arg in config) {
+            value = config[arg];
             if (value !== false) {
                 args.push('--' + arg.toDash());
                 if (value !== true) {
@@ -44,10 +43,14 @@ module.exports = function (grunt) {
         return args;
     };
 
-    var shouldRunServer = function () {
-        var configFile = getConfigSection('test').config;
+    shouldRunServer = function () {
+        var configFile = getConfigSection('test').config,
+            configs, config;
+
         if (!configFile) {
-            grunt.verbose.writeln('No buster configuration specified. Looking for buster.js...');
+            grunt.verbose.writeln(
+                'No buster configuration specified. Looking for buster.js...'
+            );
 
             if (fs.existsSync('buster.js')) {
                 configFile = 'buster.js';
@@ -60,23 +63,30 @@ module.exports = function (grunt) {
                 grunt.verbose.writeln('Found spec/buster.js');
             }
         }
-        var configs = require(path.join(process.cwd(), configFile));
 
-        for (var config in configs) {
-            if ((configs[config].environment || configs[config].env) === 'browser') {
+        configs = require(path.join(process.cwd(), configFile));
+
+        for (config in configs) {
+            if (configs[config].env === 'browser') {
                 return true;
             }
         }
     };
 
-    var runBusterServer = function () {
+    runBusterServer = function () {
         var deferred = when.defer(),
-            busterServerPath = path.resolve(__dirname, '../node_modules/.bin/buster-server');
-
-        var server = childProcess.spawn(busterServerPath, getArguments('server'), {
-            env: process.env,
-            setsid: true
-        });
+            busterServerPath = path.resolve(
+                __dirname, '../node_modules/.bin/buster-server'
+            ),
+            options = {
+                env: process.env,
+                setsid: true
+            },
+            server = childProcess.spawn(
+                busterServerPath,
+                getArguments('server'),
+                options
+            );
 
         server.stdout.once('data', function () {
             deferred.resolve(server);
@@ -97,16 +107,17 @@ module.exports = function (grunt) {
         return deferred.promise;
     };
 
-    var runBusterTest = function () {
+    runBusterTest = function () {
         var deferred = when.defer(),
-            busterTestPath = path.resolve(__dirname, '../node_modules/.bin/buster-test'),
+            busterTestPath = path.resolve(
+                __dirname, '../node_modules/.bin/buster-test'
+            ),
             output = getConfigSection('options').reportDest,
+            run = childProcess.spawn(busterTestPath, getArguments('test'), {
+                env: process.env,
+                setsid: true
+            }),
             xml;
-
-        var run = childProcess.spawn(busterTestPath, getArguments('test'), {
-            env: process.env,
-            setsid: true
-        });
 
         if (getConfigSection('test').reporter === 'xml') {
             if (!fs.existsSync(path.dirname(output))) {
@@ -117,8 +128,10 @@ module.exports = function (grunt) {
         }
 
         run.stdout.on('data', function (data) {
+            var buffer;
+
             if (xml) {
-                var buffer = new Buffer(data);
+                buffer = new Buffer(data);
 
                 return xml.write(buffer.toString());
             }
@@ -132,8 +145,9 @@ module.exports = function (grunt) {
 
         run.on('exit', function (code) {
             if (xml) {
-                grunt.log.ok('Report written to file.')
+                grunt.log.ok('Report written to file.');
             }
+
             if (code === 0) {
                 deferred.resolve();
             } else {
@@ -144,12 +158,17 @@ module.exports = function (grunt) {
         return deferred.promise;
     };
 
-    var runPhantomjs = function () {
-        var deferred = when.defer();
-        var server = childProcess.spawn(phantomjs.path, getArguments('phantomjs'), {
-            env: process.env,
-            setsid: true
-        });
+    runPhantomjs = function () {
+        var deferred = when.defer(),
+            options = {
+                env: process.env,
+                setsid: true
+            },
+            server = childProcess.spawn(
+                phantomjs.path,
+                getArguments('phantomjs'),
+                options
+            );
 
         server.stdout.on('data', function (data) {
             grunt.verbose.writeln(data);
@@ -169,18 +188,18 @@ module.exports = function (grunt) {
     grunt.registerMultiTask('buster', 'Run Buster.JS tests.', function () {
         globalConfig = this.data;
 
-        var done = this.async();
-        var stop = function (success, server, phantomjs) {
-            if (server) {
-                server.kill();
-                grunt.verbose.writeln('buster-server stopped');
-            }
-            if (phantomjs) {
-                phantomjs.kill();
-                grunt.verbose.writeln('phantomjs stopped');
-            }
-            done(success);
-        };
+        var done = this.async(),
+            stop = function (success, server, phantomjs) {
+                if (server) {
+                    server.kill();
+                    grunt.verbose.writeln('buster-server stopped');
+                }
+                if (phantomjs) {
+                    phantomjs.kill();
+                    grunt.verbose.writeln('phantomjs stopped');
+                }
+                done(success);
+            };
 
         if (shouldRunServer()) {
             runBusterServer().then(
