@@ -2,17 +2,17 @@
   "name": "grunt-buster",
   "description": "Grunt task for running Buster.JS tests",
   "version": "0.1.2",
-  "homepage": "https://github.com/thedersen/grunt-buster",
+  "homepage": "https://github.com/busterjs/grunt-buster",
   "author": {
     "name": "Thomas Pedersen",
     "url": "http://thedersen.com"
   },
   "repository": {
     "type": "git",
-    "url": "http://github.com/thedersen/grunt-buster.git"
+    "url": "git://github.com/grunt-buster/grunt-buster.git"
   },
   "bugs": {
-    "url": "https://github.com/thedersen/grunt-buster/issues"
+    "url": "https://github.com/grunt-buster/grunt-buster/issues"
   },
   "licenses": [
     {
