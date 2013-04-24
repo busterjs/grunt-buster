@@ -25,6 +25,9 @@
   "optionalDependencies": {
     "growl": "~1"
   },
+  "peerDependencies": {
+    "grunt": "~0.4.0"
+  },
   "keywords": [
     "gruntplugin",
     "grunt",

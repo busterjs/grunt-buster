@@ -59,6 +59,7 @@ Growl support is optional, but if you would like to use it follow the instructio
 * Updated project URLs
 * Require Node.js >= 0.8.0
 * Fix `path.existsSync` deprecation warning
+* Declare a peer dependency on Grunt ~0.4.0
 
 #### v0.1.2
 * Looks for buster.js in test/ and spec/ in addition to the root folder
