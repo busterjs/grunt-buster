@@ -57,6 +57,7 @@ Growl support is optional, but if you would like to use it follow the instructio
 
 #### v0.2.0 (UNRELEASED)
 * Updated project URLs
+* Require Node.js >= 0.8.0
 
 #### v0.1.2
 * Looks for buster.js in test/ and spec/ in addition to the root folder

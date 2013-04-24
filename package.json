@@ -16,6 +16,9 @@
   },
   "license": "MIT",
   "main": "./tasks/buster.js",
+  "engines": {
+    "node": ">= 0.8.0"
+  },
   "dependencies": {
     "when": "~1.3.0"
   },
