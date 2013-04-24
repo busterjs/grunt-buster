@@ -1,32 +1,55 @@
 # grunt-buster
 
-[Grunt](https://github.com/cowboy/grunt) plugin for running [Buster.JS](http://busterjs.org/) tests in [Node.js](http://nodejs.org/) or headless in [PhantomJS](http://phantomjs.org/).
+> [Grunt](http://gruntjs.com/) task for running
+> [Buster.JS](http://busterjs.org/) tests in [Node.js](http://nodejs.org/) or
+> headless in [PhantomJS](http://phantomjs.org/)
 
 
-## Getting Started
+## Getting started
 
-First, you must install buster globally:
+This plugin requires Grunt `~0.4.0`
 
-    npm install -g buster
+If you haven't used [Grunt](http://gruntjs.com/) before, be sure to check out
+the [Getting started](http://gruntjs.com/getting-started) guide, as it explains
+how to create a [Gruntfile](http://gruntjs.com/sample-gruntfile) as well as
+install and use Grunt plugins. Once you're familiar with that process, you may
+install this plugin with this command:
 
-Then install the plugin via npm:
+``` shell
+npm install grunt-buster --save-dev
+```
 
-    npm install grunt-buster
-
-Finally add this line to your project's `grunt.js` gruntfile at the bottom:
+Once the plugin has been installed, it may be enabled inside your Gruntfile
+with this line of JavaScript:
 
 ```js
 grunt.loadNpmTasks('grunt-buster');
 ```
-Now you can run the buster task with `grunt buster`.
 
-### Browser Tests
+Then, you must install Buster.JS globally:
 
-If you want to run tests for the browser environment, you also need to [install PhantomJS](https://github.com/cowboy/grunt/blob/master/docs/faq.md#why-does-grunt-complain-that-phantomjs-isnt-installed).
+``` shell
+npm install -g buster
+```
 
-### Configuration
+### Browser tests
 
-To configure buster, add this to the grunt.initConfig object:
+If you want to run tests for the browser environment, you also need to [install
+PhantomJS](http://phantomjs.org/).
+
+### Growl notifications
+
+Growl support is optional, but if you would like to use it follow the
+instructions on how to install it on
+[this site](https://github.com/visionmedia/node-growl).
+
+
+## The "buster" task
+
+### Overview
+
+In your project's Gruntfile, add a section named `buster` to the data object
+passed into `grunt.initConfig()`:
 
 ```js
 buster: {
@@ -39,21 +62,25 @@ buster: {
 }
 ```
 
-This is entierly optional, and buster will use default values if none is specified.
+### Options
 
-For available options for buster test run:
+This is entierly optional, as grunt-buster will use default values if none is
+specified.
 
-    buster test --help
+For available options for `buster test` run:
 
-For available options for buster server run:
+``` shell
+buster test --help
+```
 
-    buster server --help
+For available options for `buster server` run:
 
-### Growl
+``` shell
+buster server --help
+```
 
-Growl support is optional, but if you would like to use it follow the instructions on how to install it on [this site](https://github.com/visionmedia/node-growl).
 
-## Release notes
+## Release history
 
 #### v0.2.0 (UNRELEASED)
 * Updated project URLs
