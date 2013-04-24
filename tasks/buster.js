@@ -1,5 +1,6 @@
 module.exports = function(grunt) {
   var childProcess = require('child_process'),
+      fs = require('fs'),
       path = require('path'),
       when = require('when'),
       growl;
@@ -42,13 +43,13 @@ module.exports = function(grunt) {
     if(!configFile){
       grunt.verbose.writeln('No buster configuration specified. Looking for buster.js...');
 
-      if(path.existsSync('buster.js')) {
+      if(fs.existsSync('buster.js')) {
         configFile = 'buster.js';
         grunt.verbose.writeln('Found buster.js');
-      } else if(path.existsSync('test/buster.js')) {
+      } else if(fs.existsSync('test/buster.js')) {
         configFile = 'test/buster.js';
         grunt.verbose.writeln('Found test/buster.js');
-      } else if(path.existsSync('spec/buster.js')) {
+      } else if(fs.existsSync('spec/buster.js')) {
         configFile = 'spec/buster.js';
         grunt.verbose.writeln('Found spec/buster.js');
       }
