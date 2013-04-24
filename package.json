@@ -14,12 +14,7 @@
   "bugs": {
     "url": "https://github.com/grunt-buster/grunt-buster/issues"
   },
-  "licenses": [
-    {
-      "type": "MIT",
-      "url": "http://thedersen.mit-license.org/"
-    }
-  ],
+  "license": "MIT",
   "main": "./tasks/buster.js",
   "dependencies": {
     "when": "~1.3.0"

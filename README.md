@@ -68,8 +68,3 @@ Growl support is optional, but if you would like to use it follow the instructio
 
 #### v0.1.0
 * Initial release
-
-## License
-http://thedersen.mit-license.org/
-
-(Package and README format heavily borrowed from [grunt-mocha](https://github.com/kmiyashiro/grunt-mocha))
