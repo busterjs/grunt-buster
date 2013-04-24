@@ -1,3 +1,5 @@
+/* global phantom: true, WebPage: true */
+
 var system = require('system'),
     captureUrl = system.args[1];
 

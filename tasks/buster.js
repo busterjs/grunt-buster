@@ -85,7 +85,7 @@ module.exports = function(grunt) {
 
   var runBusterServer = function(){
     var deferred = when.defer();
-    childProcess.exec('command -v buster-server', { env: process.env }, function(error, stdout, stderr) {
+    childProcess.exec('command -v buster-server', { env: process.env }, function(error, stdout) {
       if (error) {
         busterNotFound();
         deferred.reject();
@@ -97,11 +97,11 @@ module.exports = function(grunt) {
           setsid: true
         });
 
-        server.stdout.once('data', function(data) {
+        server.stdout.once('data', function() {
           deferred.resolve(server);
         });
 
-        server.stderr.once('data', function(data) {
+        server.stderr.once('data', function() {
           deferred.reject(server);
         });
 
@@ -120,7 +120,7 @@ module.exports = function(grunt) {
 
   var runBusterTest = function(){
     var deferred = when.defer();
-    childProcess.exec('command -v buster-test', { env: process.env }, function(error, stdout, stderr) {
+    childProcess.exec('command -v buster-test', { env: process.env }, function(error, stdout) {
       if (error) {
         busterNotFound();
         deferred.reject();
@@ -170,7 +170,7 @@ module.exports = function(grunt) {
 
   var runPhantomjs = function() {
     var deferred = when.defer();
-    childProcess.exec('command -v phantomjs', { env: process.env }, function(error, stdout, stderr) {
+    childProcess.exec('command -v phantomjs', { env: process.env }, function(error, stdout) {
       if (error) {
         phantomjsNotFound();
         deferred.reject();
