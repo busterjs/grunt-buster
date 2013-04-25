@@ -17,14 +17,18 @@ module.exports = function(grunt) {
   };
 
   var getArguments = function(cmd) {
+    var port = getConfigSection('server').port || 1111,
+        url = 'http://localhost:' + port,
+        args = [],
+        config = getConfigSection(cmd);
+
     if(cmd === 'phantomjs'){
-      var port = getConfigSection('server').port || 1111,
-          url = 'http://localhost:' + port + '/capture';
-      return [__dirname + '/buster/phantom.js', url];
+      return [__dirname + '/buster/phantom.js', url + '/capture'];
     }
 
-    var args = [],
-        config = getConfigSection(cmd);
+    if(cmd === 'test'){
+      config.server = url;
+    }
 
     for(var arg in config){
       var value = config[arg];
