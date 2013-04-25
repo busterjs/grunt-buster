@@ -53,11 +53,21 @@ passed into `grunt.initConfig()`:
 
 ```js
 buster: {
-  test: {
-    config: 'path/to/my/buster.js'
+  development: {
+    test: {
+      config: 'path/to/my/buster.js'
+    },
+    server: {
+      port: 1111
+    }
   },
-  server: {
-    port: 1111
+  production: {
+    test: {
+      config: 'path/to/my/buster.min.js'
+    },
+    server: {
+      port: 1111
+    }
   }
 }
 ```
@@ -90,8 +100,8 @@ buster server --help
 
 #### v0.1.2
 * Looks for buster.js in test/ and spec/ in addition to the root folder
-* Fixed corrupt error.png and ok.png (Thanks to [Paweł Maciejewski](https://github.com/fragphace))
-* Removed console non-printable characters from growl text message (Thanks to [Paweł Maciejewski](https://github.com/fragphace))
+* Fixed corrupt error.png and ok.png (Thanks to [Pawe�� Maciejewski](https://github.com/fragphace))
+* Removed console non-printable characters from growl text message (Thanks to [Pawe�� Maciejewski](https://github.com/fragphace))
 
 #### v0.1.1
 * Ensure that tests is not run until PhantomJS finished starting (thanks to [Harrison](https://github.com/Harrison))

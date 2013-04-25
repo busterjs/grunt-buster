@@ -3,7 +3,8 @@ module.exports = function(grunt) {
       fs = require('fs'),
       path = require('path'),
       when = require('when'),
-      growl;
+      growl,
+      data;
 
   try {
     growl = require('growl');
@@ -13,7 +14,7 @@ module.exports = function(grunt) {
   }
 
   var getConfigSection = function(cmd){
-    return (grunt.config('buster') || {})[cmd] || {};
+    return (data || {})[cmd] || {};
   };
 
   var getArguments = function(cmd) {
@@ -39,7 +40,8 @@ module.exports = function(grunt) {
   };
 
   var shouldRunServer = function(){
-    var configFile = getConfigSection('test').config;
+    configFile = data.test.config;
+
     if(!configFile){
       grunt.verbose.writeln('No buster configuration specified. Looking for buster.js...');
 
@@ -54,6 +56,7 @@ module.exports = function(grunt) {
         grunt.verbose.writeln('Found spec/buster.js');
       }
     }
+
     var configs = require(path.join(process.cwd(), configFile));
 
     for(var config in configs){
@@ -200,8 +203,9 @@ module.exports = function(grunt) {
     return deferred.promise;
   };
 
-  grunt.registerTask('buster', 'Run Buster.JS tests.', function() {
+  grunt.registerMultiTask('buster', 'Run Buster.JS tests.', function() {
     var done = this.async();
+    data = this.data;
     var stop = function(success, server, phantomjs){
       if(server){
         server.kill();
