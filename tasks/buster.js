@@ -25,6 +25,11 @@ module.exports = function(grunt) {
 
     var args = [],
         config = getConfigSection(cmd);
+     
+    if(cmd === 'test'){
+      var port = getConfigSection('server').port || 1111;
+      args.push('--server', 'http://localhost:' + port + '/capture')
+    }
 
     for(var arg in config){
       var value = config[arg];
