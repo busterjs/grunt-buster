@@ -1,35 +1,34 @@
 module.exports = function(grunt) {
 
-    "use strict";
+  "use strict";
 
-    grunt.initConfig({
-        jshint: {
-            all: [
-                'Gruntfile.js',
-                'tasks/**/*.js',
-                'test/**/*.js'
-            ],
-            options: {
-                jshintrc: '.jshintrc'
-            }
-        },
+  var files = [
+    'Gruntfile.js',
+    'tasks/**/*.js',
+    'test/**/*.js'
+  ];
 
-        watch: {
-            all: {
-                files: [
-                    'tasks/**/*.js',
-                    'test/**/*.js'
-                ],
-                tasks: ['test']
-            }
-        }
-    });
+  grunt.initConfig({
+    jshint: {
+      all: files,
+      options: {
+        jshintrc: '.jshintrc'
+      }
+    },
 
-    grunt.loadNpmTasks('grunt-contrib-jshint');
-    grunt.loadNpmTasks('grunt-contrib-watch');
+    watch: {
+      all: {
+        files: files,
+        tasks: ['test']
+      }
+    }
+  });
 
-    grunt.loadTasks('./tasks');
+  grunt.loadNpmTasks('grunt-contrib-jshint');
+  grunt.loadNpmTasks('grunt-contrib-watch');
 
-    grunt.registerTask('test', ['jshint', 'buster']);
-    grunt.registerTask('default', ['test']);
+  grunt.loadTasks('./tasks');
+
+  grunt.registerTask('test', ['jshint', 'buster']);
+  grunt.registerTask('default', ['test']);
 };
