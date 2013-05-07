@@ -80,6 +80,29 @@ buster server --help
 ```
 
 
+## Development
+
+If you wish to contribute, please ensure a green test suite.
+
+Install development dependencies:
+
+```
+npm install
+```
+
+Running the test suite:
+
+```
+npm test
+```
+
+Starting a watch loop listening to file changes and running the test suite:
+
+```
+npm start
+```
+
+
 ## Release history
 
 #### v0.2.0 (UNRELEASED)
