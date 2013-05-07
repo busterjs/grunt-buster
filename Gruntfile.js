@@ -1,6 +1,6 @@
 module.exports = function(grunt) {
 
-  "use strict";
+  'use strict';
 
   var files = [
     'Gruntfile.js',

@@ -1,4 +1,4 @@
-var buster = require("buster");
+var buster = require('buster');
 
 buster.testCase('Growl', {
   'works': function () {

@@ -1,6 +1,6 @@
 exports.node_tests = {
-  environment: "node",
+  environment: 'node',
   tests: [
-    "**/*-test.js"
+    '**/*-test.js'
   ]
 };
