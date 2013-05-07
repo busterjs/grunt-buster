@@ -11,9 +11,24 @@ module.exports = function(grunt) {
             options: {
                 jshintrc: '.jshintrc'
             }
+        },
+
+        watch: {
+            all: {
+                files: [
+                    'tasks/**/*.js',
+                    'test/**/*.js'
+                ],
+                tasks: ['test']
+            }
         }
     });
 
     grunt.loadNpmTasks('grunt-contrib-jshint');
-    grunt.registerTask('default', ['jshint']);
+    grunt.loadNpmTasks('grunt-contrib-watch');
+
+    grunt.loadTasks('./tasks');
+
+    grunt.registerTask('test', ['jshint', 'buster']);
+    grunt.registerTask('default', ['test']);
 };
