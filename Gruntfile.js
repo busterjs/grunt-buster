@@ -9,6 +9,10 @@ module.exports = function(grunt) {
   ];
 
   grunt.initConfig({
+    buster: {
+      growl: true
+    },
+
     jshint: {
       all: files,
       options: {

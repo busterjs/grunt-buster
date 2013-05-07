@@ -39,10 +39,17 @@ PhantomJS](http://phantomjs.org/).
 
 ### Growl notifications
 
-Growl support is optional, but if you would like to use it follow the
-instructions on how to install it on
-[this site](https://github.com/visionmedia/node-growl).
+Growl support is optional. If you would like to use it follow the instructions
+on [how to install node-growl](https://github.com/visionmedia/node-growl), then
+enable Growl notifications in the `buster` task in your Gruntfile:
 
+``` js
+buster: {
+  growl: true
+}
+```
+
+You should now get notifications whenever your test suite passes or fails.
 
 ## The "buster" task
 
@@ -51,7 +58,7 @@ instructions on how to install it on
 In your project's Gruntfile, add a section named `buster` to the data object
 passed into `grunt.initConfig()`:
 
-```js
+``` js
 buster: {
   test: {
     config: 'path/to/my/buster.js'

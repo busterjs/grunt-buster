@@ -3,14 +3,7 @@ module.exports = function(grunt) {
       fs = require('fs'),
       path = require('path'),
       when = require('when'),
-      growl;
-
-  try {
-    growl = require('growl');
-  } catch(e) {
-    growl = Function.prototype;
-    grunt.verbose.writeln('Growl not found, `npm install growl` for Growl support'.yellow);
-  }
+      growl = require('./buster/growl.js');
 
   var getConfigSection = function(cmd){
     return (grunt.config('buster') || {})[cmd] || {};
@@ -148,18 +141,19 @@ module.exports = function(grunt) {
             text = output[output.length - 2].toString().split(', ').join('\n') + output[output.length - 1];
           }
           text = text.replace(/\u001b\[.*m/g, '').trim();
-          if(code === 0){
-            growl(text, {
-              title: 'Tests Passed',
-              image: __dirname + '/buster/ok.png'
-            });
+          if (code === 0) {
+            if (getConfigSection('growl') === true) {
+              growl.passed(text).otherwise(function (error) {
+                grunt.log.writeln(error.yellow);
+              });
+            }
             deferred.resolve();
-          }
-          else {
-            growl(text, {
-              title: 'Tests Failed',
-              image: __dirname + '/buster/error.png'
-            });
+          } else {
+            if (getConfigSection('growl') === true) {
+              growl.failed(text).otherwise(function (error) {
+                grunt.log.writeln(error.yellow);
+              });
+            }
             deferred.reject();
           }
         });
