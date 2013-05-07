@@ -117,6 +117,8 @@ npm start
 * Require Node.js >= 0.8.0
 * Fix `path.existsSync` deprecation warning
 * Declare a peer dependency on Grunt ~0.4.0
+* Made Growl notifications optional. You must now install the `growl` package
+  from npm and set the `growl` config to `true` to get notifications.
 
 #### v0.1.2
 * Looks for buster.js in test/ and spec/ in addition to the root folder
