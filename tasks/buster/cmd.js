@@ -6,16 +6,16 @@ var path = require('path');
 var exports = module.exports = {
 
   findExecutable: function (cmd, callback) {
-    var candiate = path.join('node_modules', '.bin', cmd);
+    var candidate = path.join('node_modules', '.bin', cmd);
 
     if (os.platform() === 'win32') {
-      candiate += '.cmd';
+      candidate += '.cmd';
     }
 
     callback = callback || function () {};
 
-    if (fs.existsSync(candiate)) {
-      callback(null, candiate);
+    if (fs.existsSync(candidate)) {
+      callback(null, candidate);
     } else {
       cp.exec('command -v ' + cmd, { env: process.env }, function (error, stdout) {
         if (error) {
