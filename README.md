@@ -83,7 +83,7 @@ available options for `buster server` run:
 buster server --help
 ```
 
-#### growl
+#### options.growl
 
 Growl support is optional. If you would like to use it follow the instructions
 on [how to install node-growl](https://github.com/visionmedia/node-growl), then
@@ -93,7 +93,9 @@ Example:
 
 ``` js
 buster: {
-  growl: true
+  options: {
+    growl: true
+  }
 }
 ```
 
@@ -132,7 +134,7 @@ npm start
 * Fix `path.existsSync` deprecation warning
 * Declare a peer dependency on Grunt ~0.4.0
 * Made Growl notifications optional. You must now install the `growl` package
-  from npm and set `growl` to `true` to get notifications.
+  from npm and set `options.growl` to `true` to get notifications.
 
 #### v0.1.2
 

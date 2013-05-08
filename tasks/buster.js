@@ -3,7 +3,8 @@ module.exports = function(grunt) {
       fs = require('fs'),
       path = require('path'),
       when = require('when'),
-      growl = require('./buster/growl.js');
+      growl = require('./buster/growl.js'),
+      options;
 
   var getConfigSection = function(cmd){
     return (grunt.config('buster') || {})[cmd] || {};
@@ -142,14 +143,14 @@ module.exports = function(grunt) {
           }
           text = text.replace(/\u001b\[.*m/g, '').trim();
           if (code === 0) {
-            if (getConfigSection('growl') === true) {
+            if (options.growl) {
               growl.passed(text).otherwise(function (error) {
                 grunt.log.writeln(error.yellow);
               });
             }
             deferred.resolve();
           } else {
-            if (getConfigSection('growl') === true) {
+            if (options.growl) {
               growl.failed(text).otherwise(function (error) {
                 grunt.log.writeln(error.yellow);
               });
@@ -195,6 +196,9 @@ module.exports = function(grunt) {
   };
 
   grunt.registerTask('buster', 'Run Buster.JS tests.', function() {
+    options = this.options({
+      growl: false
+    });
     var done = this.async();
     var stop = function(success, server, phantomjs){
       if(server){

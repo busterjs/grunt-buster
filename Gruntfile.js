@@ -10,7 +10,9 @@ module.exports = function(grunt) {
 
   grunt.initConfig({
     buster: {
-      growl: true
+      options: {
+        growl: true
+      }
     },
 
     jshint: {
