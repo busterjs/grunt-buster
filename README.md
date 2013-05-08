@@ -169,7 +169,7 @@ npm start
   from npm and set `options.growl` to `true` to get notifications.
 * Added support for Grunt multi-tasks. You must now define at least one target
   for the `buster` task to have any work to do. See the above docs for a
-  minimal config examle.
+  minimal config example. (Thanks to Richard Nespithal)
 
 #### v0.1.2
 
