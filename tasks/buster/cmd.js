@@ -1,11 +1,9 @@
+var cp = require('child_process');
+
 var exports = module.exports = {
 
-  _exec: require('child_process').exec,
-
-  _spawn: require('child_process').spawn,
-
   findExecutable: function (cmd, callback) {
-    exports._exec('command -v ' + cmd, { env: process.env }, function (error, stdout) {
+    cp.exec('command -v ' + cmd, { env: process.env }, function (error, stdout) {
       if (error) {
         callback(error);
       } else {
@@ -20,7 +18,7 @@ var exports = module.exports = {
       if (error) {
         callback(error);
       } else {
-        callback(null, exports._spawn(path, args, {
+        callback(null, cp.spawn(path, args, {
           env: process.env,
           setsid: true
         }));
