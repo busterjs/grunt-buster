@@ -1,8 +1,8 @@
 module.exports = function(grunt) {
-  var childProcess = require('child_process'),
-      fs = require('fs'),
+  var fs = require('fs'),
       path = require('path'),
       when = require('when'),
+      cmd = require('./buster/cmd'),
       growl = require('./buster/growl.js'),
       data,
       options;
@@ -87,18 +87,12 @@ module.exports = function(grunt) {
 
   var runBusterServer = function(){
     var deferred = when.defer();
-    childProcess.exec('command -v buster-server', { env: process.env }, function(error, stdout) {
+
+    cmd.run('buster-server', getArguments('server'), function (error, server) {
       if (error) {
         busterNotFound();
         deferred.reject();
-      }
-      else {
-        var mod = stdout.split('\n')[0];
-        var server = childProcess.spawn(mod, getArguments('server'), {
-          env: process.env,
-          setsid: true
-        });
-
+      } else {
         server.stdout.once('data', function() {
           deferred.resolve(server);
         });
@@ -115,6 +109,8 @@ module.exports = function(grunt) {
           process.stderr.write(data);
         });
       }
+
+      return deferred;
     });
 
     return deferred.promise;
@@ -122,18 +118,13 @@ module.exports = function(grunt) {
 
   var runBusterTest = function(){
     var deferred = when.defer();
-    childProcess.exec('command -v buster-test', { env: process.env }, function(error, stdout) {
+
+    cmd.run('buster-test', getArguments('test'), function (error, run) {
       if (error) {
         busterNotFound();
         deferred.reject();
-      }
-      else {
-        var output = [],
-            mod = stdout.split('\n')[0];
-        var run = childProcess.spawn(mod, getArguments('test'), {
-          env: process.env,
-          setsid: true
-        });
+      } else {
+        var output = [];
 
         run.stdout.on('data', function(data) {
           output.push(data);
@@ -168,24 +159,18 @@ module.exports = function(grunt) {
         });
       }
     });
+
     return deferred.promise;
   };
 
   var runPhantomjs = function() {
     var deferred = when.defer();
-    childProcess.exec('command -v phantomjs', { env: process.env }, function(error, stdout) {
+
+    cmd.run('phantomjs', getArguments('phantomjs'), function (error, server) {
       if (error) {
         phantomjsNotFound();
         deferred.reject();
-      }
-      else {
-        var mod = stdout.split('\n')[0];
-
-        var server = childProcess.spawn(mod, getArguments('phantomjs'), {
-          env: process.env,
-          setsid: true
-        });
-
+      } else {
         server.stdout.on('data', function(data) {
           grunt.verbose.writeln(data);
         });
