@@ -57,7 +57,6 @@ buster.testCase('Exec', {
   '.run': {
 
     setUp: function () {
-      this.execStub = this.stub(cmd, 'exec');
       this.spawnStub = this.stub(cmd, 'spawn');
     },
 
@@ -87,9 +86,28 @@ buster.testCase('Exec', {
       this.stub(cmd, 'findExecutable', function (_, callback) {
         callback('some error');
       });
+
       var spy = this.spy();
       cmd.run('ls', [], spy);
+
       assert.calledOnceWith(spy, 'some error');
+    },
+
+    'calls callback with return value from .spawn': function () {
+      this.stub(cmd, 'exec', function (cmd, __, callback) {
+        callback(null, cmd);
+      });
+
+      this.spawnStub.restore();
+      var handle = {};
+      this.stub(cmd, 'spawn', function () {
+        return handle;
+      });
+
+      var spy = this.spy();
+      cmd.run('ls', [], spy);
+
+      assert.calledOnceWith(spy, null, handle);
     }
 
   },
