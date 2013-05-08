@@ -5,20 +5,24 @@ var cmd = require('../tasks/buster/cmd');
 
 buster.testCase('Exec', {
 
-  '.exec is an alias of child_process.exec': function () {
-    assert.same(cmd.exec, require('child_process').exec);
+  '._exec is an alias of child_process._exec': function () {
+    assert.same(cmd._exec, require('child_process').exec);
+  },
+
+  '._spawn is an alias of child_process.spawn': function () {
+    assert.same(cmd._spawn, require('child_process').spawn);
   },
 
   '.findExecutable': {
 
     'calls .exec with `command -v` and argument': function () {
-      var stub = this.stub(cmd, 'exec');
+      var stub = this.stub(cmd, '_exec');
       cmd.findExecutable('ls');
       assert.calledOnceWith(stub, 'command -v ls');
     },
 
-    'passes along environment to .exec': function () {
-      var stub = this.stub(cmd, 'exec');
+    'passes along environment to ._exec': function () {
+      var stub = this.stub(cmd, '_exec');
       cmd.findExecutable('ls');
       assert.calledOnceWith(stub, 'command -v ls', {
         env: process.env
@@ -26,7 +30,7 @@ buster.testCase('Exec', {
     },
 
     'calls callback with executable path': function () {
-      this.stub(cmd, 'exec', function (_, __, callback) {
+      this.stub(cmd, '_exec', function (_, __, callback) {
         callback(null, '/foo/bar/ls');
       });
       var spy = this.spy();
@@ -35,7 +39,7 @@ buster.testCase('Exec', {
     },
 
     'fetches first result': function () {
-      this.stub(cmd, 'exec', function (_, __, callback) {
+      this.stub(cmd, '_exec', function (_, __, callback) {
         callback(null, '/foo/bar/ls\n/baz/quux/ls\n');
       });
       var spy = this.spy();
@@ -44,12 +48,15 @@ buster.testCase('Exec', {
     },
 
     'calls callback with error': function () {
-      this.stub(cmd, 'exec', function (_, __, callback) {
+      this.stub(cmd, '_exec', function (_, __, callback) {
         callback('some error');
       });
       var spy = this.spy();
       cmd.findExecutable('ls', spy);
       assert.calledOnceWith(spy, 'some error');
+    },
+
+    '// looks up in node_modules/.bin first': function () {
     }
 
   },
@@ -57,7 +64,7 @@ buster.testCase('Exec', {
   '.run': {
 
     setUp: function () {
-      this.spawnStub = this.stub(cmd, 'spawn');
+      this.spawnStub = this.stub(cmd, '_spawn');
     },
 
     'calls .findExecutable with cmd name': function () {
@@ -66,7 +73,7 @@ buster.testCase('Exec', {
       assert.calledOnceWith(stub, 'ls');
     },
 
-    'calls .spawn with results of .findExecutable': function () {
+    'calls ._spawn with results of .findExecutable': function () {
       this.stub(cmd, 'findExecutable', function (_, callback) {
         callback(null, '/foo/bar/ls');
       });
@@ -74,7 +81,7 @@ buster.testCase('Exec', {
       assert.calledOnceWith(this.spawnStub, '/foo/bar/ls');
     },
 
-    'calls .spawn with environment and setsid': function () {
+    'calls ._spawn with environment and setsid': function () {
       this.stub(cmd, 'findExecutable', function (_, callback) {
         callback(null, 'ls');
       });
@@ -85,7 +92,7 @@ buster.testCase('Exec', {
       });
     },
 
-    'calls .spawn with correct arguments': function () {
+    'calls ._spawn with correct arguments': function () {
       this.stub(cmd, 'findExecutable', function (_, callback) {
         callback(null, 'ls');
       });
@@ -104,14 +111,14 @@ buster.testCase('Exec', {
       assert.calledOnceWith(spy, 'some error');
     },
 
-    'calls callback with return value from .spawn': function () {
-      this.stub(cmd, 'exec', function (cmd, __, callback) {
+    'calls callback with return value from ._spawn': function () {
+      this.stub(cmd, '_exec', function (cmd, __, callback) {
         callback(null, cmd);
       });
 
       this.spawnStub.restore();
       var handle = {};
-      this.stub(cmd, 'spawn', function () {
+      this.stub(cmd, '_spawn', function () {
         return handle;
       });
 
@@ -121,10 +128,6 @@ buster.testCase('Exec', {
       assert.calledOnceWith(spy, null, handle);
     }
 
-  },
-
-  '.spawn is an alias of child_process.spawn': function () {
-    assert.same(cmd.spawn, require('child_process').spawn);
   }
 
 });
