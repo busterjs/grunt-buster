@@ -18,7 +18,10 @@ var exports = module.exports = {
       if (error) {
         callback(error);
       } else {
-        callback(null, exports.spawn(path, args));
+        callback(null, exports.spawn(path, args, {
+          env: process.env,
+          setsid: true
+        }));
       }
     });
   },

@@ -74,6 +74,17 @@ buster.testCase('Exec', {
       assert.calledOnceWith(this.spawnStub, '/foo/bar/ls');
     },
 
+    'calls .spawn with environment and setsid': function () {
+      this.stub(cmd, 'findExecutable', function (_, callback) {
+        callback(null, 'ls');
+      });
+      cmd.run('ls', []);
+      assert.calledOnceWith(this.spawnStub, 'ls', [], {
+        env: process.env,
+        setsid: true
+      });
+    },
+
     'calls .spawn with correct arguments': function () {
       this.stub(cmd, 'findExecutable', function (_, callback) {
         callback(null, 'ls');
