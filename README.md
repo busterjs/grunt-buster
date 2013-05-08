@@ -26,19 +26,19 @@ with this line of JavaScript:
 grunt.loadNpmTasks('grunt-buster');
 ```
 
-Then, you must install Buster.JS globally:
+Then, you must install Buster.JS:
 
 ``` shell
-sudo npm install -g buster
+npm install buster
 ```
 
 ### Browser tests
 
 If you want to run tests for the browser environment, you also need to [install
-PhantomJS](http://phantomjs.org/) globally:
+PhantomJS](http://phantomjs.org/):
 
 ``` shell
-sudo npm install -g phantomjs
+npm install phantomjs
 ```
 
 
@@ -172,6 +172,7 @@ npm start
   minimal config example. (Thanks to Richard Nespithal)
 * Add `--server` option to `buster-test`
   (Thanks to [Andreas Köberle](https://github.com/eskimoblood))
+* Add support for locally installed versions of Buster.JS and PhantomJS
 
 #### v0.1.2
 
