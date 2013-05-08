@@ -1,4 +1,4 @@
-# grunt-buster
+# grunt-buster [![Build Status](https://travis-ci.org/busterjs/grunt-buster.png?branch=master)](https://travis-ci.org/busterjs/grunt-buster)
 
 > [Grunt](http://gruntjs.com/) task for running
 > [Buster.JS](http://busterjs.org/) tests in [Node.js](http://nodejs.org/) or
