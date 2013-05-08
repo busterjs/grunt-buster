@@ -1,40 +1,35 @@
-var when = require('when');
+var success = function (growl, text) {
+  growl(text, {
+    title: 'Tests Passed',
+    image: __dirname + '/ok.png'
+  });
+};
+
+var failure = function (growl, text) {
+  growl(text, {
+    title: 'Tests Failed',
+    image: __dirname + '/error.png'
+  });
+};
 
 module.exports = {
-  init: function () {
-    try {
-      return when.resolve(require('growl'));
-    } catch (e) {
-      return when.reject(
+  init: function (grunt) {
+    var growl = module.exports.requireGrowl();
+
+    if (!growl) {
+      grunt.log.error(
         'Growl not found; run `npm install growl` for Growl support');
+      return;
     }
+
+    grunt.event.on('buster:success', success.bind(this, growl));
+    grunt.event.on('buster:failure', failure.bind(this, growl));
   },
 
-  passed: function (text) {
-    var deferred = when.defer();
-    module.exports.init().then(function (growl) {
-      growl(text, {
-        title: 'Tests Passed',
-        image: __dirname + '/ok.png'
-      });
-      deferred.resolve();
-    }, function (error) {
-      deferred.reject(error);
-    });
-    return deferred.promise;
-  },
-
-  failed: function (text) {
-    var deferred = when.defer();
-    module.exports.init().then(function (growl) {
-      growl(text, {
-        title: 'Tests Failed',
-        image: __dirname + '/error.png'
-      });
-      deferred.resolve();
-    }, function (error) {
-      deferred.reject(error); 
-    });
-    return deferred.promise;
+  requireGrowl: function () {
+    try {
+      return require('growl');
+    } catch (e) {
+    }
   }
 };

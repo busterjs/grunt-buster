@@ -129,18 +129,10 @@ module.exports = function (grunt) {
           }
           text = text.replace(/\u001b\[.*m/g, '').trim();
           if (code === 0) {
-            if (options.growl) {
-              growl.passed(text).otherwise(function (error) {
-                grunt.log.writeln(error.yellow);
-              });
-            }
+            grunt.event.emit('buster:success', text);
             deferred.resolve();
           } else {
-            if (options.growl) {
-              growl.failed(text).otherwise(function (error) {
-                grunt.log.writeln(error.yellow);
-              });
-            }
+            grunt.event.emit('buster:failure', text);
             deferred.reject();
           }
         });
@@ -181,6 +173,11 @@ module.exports = function (grunt) {
     options = this.options({
       growl: false
     });
+
+    if (options.growl) {
+      growl.init(grunt);
+    }
+
     var done = this.async();
     var stop = function (success, server, phantomjs) {
       if (server) {
@@ -217,8 +214,7 @@ module.exports = function (grunt) {
           stop(false, server);
         }
       );
-    }
-    else {
+    } else {
       runBusterTest().then(
         function () {
           done(null);
