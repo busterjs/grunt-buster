@@ -44,17 +44,17 @@ module.exports = function (grunt) {
     var configFile = getConfigSection('test').config;
     if (!configFile) {
       grunt.verbose.writeln(
-          'No buster configuration specified. Looking for buster.js...');
+          'No buster configuration specified. Looking in known locations...');
 
       if (fs.existsSync('buster.js')) {
         configFile = 'buster.js';
-        grunt.verbose.writeln('Found buster.js');
+        grunt.verbose.writeln('Found ./buster.js');
       } else if (fs.existsSync('test/buster.js')) {
         configFile = 'test/buster.js';
-        grunt.verbose.writeln('Found test/buster.js');
+        grunt.verbose.writeln('Found ./test/buster.js');
       } else if (fs.existsSync('spec/buster.js')) {
         configFile = 'spec/buster.js';
-        grunt.verbose.writeln('Found spec/buster.js');
+        grunt.verbose.writeln('Found ./spec/buster.js');
       }
     }
     var configs = require(path.join(process.cwd(), configFile));
@@ -67,23 +67,8 @@ module.exports = function (grunt) {
   };
 
   var busterNotFound = function () {
-    grunt.log.errorlns(
-          'In order for this task to work properly, Buster.JS must be ' +
-          'installed and in the system PATH (if you can run "buster" at ' +
-          'the command line, this task should work). ' +
-          'To install Buster.JS, run `npm install -g buster`.'
-        );
-  };
-
-  var phantomjsNotFound = function () {
-    grunt.log.errorlns(
-          'In order for this task to work properly, PhantomJS must be ' +
-          'installed and in the system PATH (if you can run "phantomjs" at' +
-          'the command line, this task should work). Unfortunately, ' +
-          'PhantomJS cannot be installed automatically via npm or grunt. ' +
-          'See the grunt FAQ for PhantomJS installation instructions: ' +
-          'https://github.com/cowboy/grunt/blob/master/docs/faq.md'
-        );
+    grunt.log.error(
+      'Buster.JS not found. Run `npm install buster` to install.');
   };
 
   var runBusterServer = function () {
@@ -170,7 +155,8 @@ module.exports = function (grunt) {
 
     cmd.run('phantomjs', getArguments('phantomjs'), function (error, server) {
       if (error) {
-        phantomjsNotFound();
+        grunt.log.error(
+          'PhantomJS not found. Run `npm install phantomjs` to install.');
         deferred.reject();
       } else {
         server.stdout.on('data', function (data) {
