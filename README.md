@@ -22,34 +22,25 @@ npm install grunt-buster --save-dev
 Once the plugin has been installed, it may be enabled inside your Gruntfile
 with this line of JavaScript:
 
-```js
+``` js
 grunt.loadNpmTasks('grunt-buster');
 ```
 
 Then, you must install Buster.JS globally:
 
 ``` shell
-npm install -g buster
+sudo npm install -g buster
 ```
 
 ### Browser tests
 
 If you want to run tests for the browser environment, you also need to [install
-PhantomJS](http://phantomjs.org/).
+PhantomJS](http://phantomjs.org/) globally:
 
-### Growl notifications
-
-Growl support is optional. If you would like to use it follow the instructions
-on [how to install node-growl](https://github.com/visionmedia/node-growl), then
-enable Growl notifications in the `buster` task in your Gruntfile:
-
-``` js
-buster: {
-  growl: true
-}
+``` shell
+sudo npm install -g phantomjs
 ```
 
-You should now get notifications whenever your test suite passes or fails.
 
 ## The "buster" task
 
@@ -71,20 +62,42 @@ buster: {
 
 ### Options
 
-This is entierly optional, as grunt-buster will use default values if none is
+This is entirely optional, as grunt-buster will use default values if none is
 specified.
 
-For available options for `buster test` run:
+#### test
+
+An object with options passed as command line arguments to `buster test`. For
+available options for `buster test` run:
 
 ``` shell
 buster test --help
 ```
 
-For available options for `buster server` run:
+#### server
+
+An object with options passed as command line arguments to `buster server`. For
+available options for `buster server` run:
 
 ``` shell
 buster server --help
 ```
+
+#### growl
+
+Growl support is optional. If you would like to use it follow the instructions
+on [how to install node-growl](https://github.com/visionmedia/node-growl), then
+enable Growl notifications in the `buster` task in your Gruntfile.
+
+Example:
+
+``` js
+buster: {
+  growl: true
+}
+```
+
+You should now get notifications whenever your test suite passes or fails.
 
 
 ## Development
@@ -113,20 +126,26 @@ npm start
 ## Release history
 
 #### v0.2.0 (UNRELEASED)
-* Updated project URLs
+
+* Updated project URLs after move to busterjs organization on GitHub
 * Require Node.js >= 0.8.0
 * Fix `path.existsSync` deprecation warning
 * Declare a peer dependency on Grunt ~0.4.0
 * Made Growl notifications optional. You must now install the `growl` package
-  from npm and set the `growl` config to `true` to get notifications.
+  from npm and set `growl` to `true` to get notifications.
 
 #### v0.1.2
+
 * Looks for buster.js in test/ and spec/ in addition to the root folder
 * Fixed corrupt error.png and ok.png (Thanks to [Paweł Maciejewski](https://github.com/fragphace))
-* Removed console non-printable characters from growl text message (Thanks to [Paweł Maciejewski](https://github.com/fragphace))
+* Removed console non-printable characters from growl text message (Thanks to
+  [Paweł Maciejewski](https://github.com/fragphace))
 
 #### v0.1.1
-* Ensure that tests is not run until PhantomJS finished starting (thanks to [Harrison](https://github.com/Harrison))
+
+* Ensure that tests is not run until PhantomJS finished starting (thanks to
+  [Harrison](https://github.com/Harrison))
 
 #### v0.1.0
+
 * Initial release
