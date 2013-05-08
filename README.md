@@ -170,6 +170,8 @@ npm start
 * Added support for Grunt multi-tasks. You must now define at least one target
   for the `buster` task to have any work to do. See the above docs for a
   minimal config example. (Thanks to Richard Nespithal)
+* Add `--server` option to `buster-test`
+  (Thanks to [Andreas Köberle](https://github.com/eskimoblood))
 
 #### v0.1.2
 
