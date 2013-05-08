@@ -1,4 +1,4 @@
-module.exports = function(grunt) {
+module.exports = function (grunt) {
   var fs = require('fs'),
       path = require('path'),
       when = require('when'),
@@ -7,14 +7,14 @@ module.exports = function(grunt) {
       data,
       options;
 
-  var getConfigSection = function(cmd){
+  var getConfigSection = function (cmd) {
     return (data || {})[cmd] || {};
   };
 
-  var getArguments = function(cmd) {
+  var getArguments = function (cmd) {
     var port, url;
 
-    if(cmd === 'phantomjs'){
+    if (cmd === 'phantomjs') {
       port = getConfigSection('server').port || 1111;
       url = 'http://localhost:' + port + '/capture';
       return [__dirname + '/buster/phantom.js', url];
@@ -22,17 +22,17 @@ module.exports = function(grunt) {
 
     var args = [],
         config = getConfigSection(cmd);
-     
-    if(cmd === 'test'){
+
+    if (cmd === 'test') {
       port = getConfigSection('server').port || 1111;
       args.push('--server', 'http://localhost:' + port + '/capture');
     }
 
-    for(var arg in config){
+    for (var arg in config) {
       var value = config[arg];
-      if(value !== false) {
+      if (value !== false) {
         args.push('--' + arg);
-        if(value !== true){
+        if (value !== true) {
           args.push(value);
         }
       }
@@ -40,32 +40,32 @@ module.exports = function(grunt) {
     return args;
   };
 
-  var shouldRunServer = function(){
+  var shouldRunServer = function () {
     var configFile = getConfigSection('test').config;
-    if(!configFile){
+    if (!configFile) {
       grunt.verbose.writeln('No buster configuration specified. Looking for buster.js...');
 
-      if(fs.existsSync('buster.js')) {
+      if (fs.existsSync('buster.js')) {
         configFile = 'buster.js';
         grunt.verbose.writeln('Found buster.js');
-      } else if(fs.existsSync('test/buster.js')) {
+      } else if (fs.existsSync('test/buster.js')) {
         configFile = 'test/buster.js';
         grunt.verbose.writeln('Found test/buster.js');
-      } else if(fs.existsSync('spec/buster.js')) {
+      } else if (fs.existsSync('spec/buster.js')) {
         configFile = 'spec/buster.js';
         grunt.verbose.writeln('Found spec/buster.js');
       }
     }
     var configs = require(path.join(process.cwd(), configFile));
 
-    for(var config in configs){
-      if((configs[config].environment || configs[config].env) === 'browser'){
+    for (var config in configs) {
+      if ((configs[config].environment || configs[config].env) === 'browser') {
         return true;
       }
     }
   };
 
-  var busterNotFound = function(){
+  var busterNotFound = function () {
     grunt.log.errorlns(
           'In order for this task to work properly, Buster.JS must be ' +
           'installed and in the system PATH (if you can run "buster" at ' +
@@ -74,7 +74,7 @@ module.exports = function(grunt) {
         );
   };
 
-  var phantomjsNotFound = function(){
+  var phantomjsNotFound = function () {
     grunt.log.errorlns(
           'In order for this task to work properly, PhantomJS must be ' +
           'installed and in the system PATH (if you can run "phantomjs" at' +
@@ -85,7 +85,7 @@ module.exports = function(grunt) {
         );
   };
 
-  var runBusterServer = function(){
+  var runBusterServer = function () {
     var deferred = when.defer();
 
     cmd.run('buster-server', getArguments('server'), function (error, server) {
@@ -93,19 +93,19 @@ module.exports = function(grunt) {
         busterNotFound();
         deferred.reject();
       } else {
-        server.stdout.once('data', function() {
+        server.stdout.once('data', function () {
           deferred.resolve(server);
         });
 
-        server.stderr.once('data', function() {
+        server.stderr.once('data', function () {
           deferred.reject(server);
         });
 
-        server.stdout.on('data', function(data) {
+        server.stdout.on('data', function (data) {
           grunt.log.write(data);
         });
 
-        server.stderr.on('data', function(data) {
+        server.stderr.on('data', function (data) {
           grunt.log.error(data);
         });
       }
@@ -116,7 +116,7 @@ module.exports = function(grunt) {
     return deferred.promise;
   };
 
-  var runBusterTest = function(){
+  var runBusterTest = function () {
     var deferred = when.defer();
 
     cmd.run('buster-test', getArguments('test'), function (error, run) {
@@ -126,18 +126,18 @@ module.exports = function(grunt) {
       } else {
         var output = [];
 
-        run.stdout.on('data', function(data) {
+        run.stdout.on('data', function (data) {
           output.push(data);
           process.stdout.write(data);
         });
 
-        run.stderr.on('data', function(data) {
+        run.stderr.on('data', function (data) {
           process.stderr.write(data);
         });
 
-        run.on('exit', function(code) {
+        run.on('exit', function (code) {
           var text = '';
-          if(output[output.length - 2]){
+          if (output[output.length - 2]) {
             text = output[output.length - 2].toString().split(', ').join('\n') + output[output.length - 1];
           }
           text = text.replace(/\u001b\[.*m/g, '').trim();
@@ -163,7 +163,7 @@ module.exports = function(grunt) {
     return deferred.promise;
   };
 
-  var runPhantomjs = function() {
+  var runPhantomjs = function () {
     var deferred = when.defer();
 
     cmd.run('phantomjs', getArguments('phantomjs'), function (error, server) {
@@ -171,15 +171,15 @@ module.exports = function(grunt) {
         phantomjsNotFound();
         deferred.reject();
       } else {
-        server.stdout.on('data', function(data) {
+        server.stdout.on('data', function (data) {
           grunt.verbose.writeln(data);
         });
 
-        server.stderr.on('data', function(data) {
+        server.stderr.on('data', function (data) {
           grunt.verbose.writeln(data);
         });
 
-        server.stdout.once('data', function() {
+        server.stdout.once('data', function () {
           deferred.resolve(server);
         });
       }
@@ -188,54 +188,54 @@ module.exports = function(grunt) {
     return deferred.promise;
   };
 
-  grunt.registerMultiTask('buster', 'Run Buster.JS tests.', function() {
+  grunt.registerMultiTask('buster', 'Run Buster.JS tests.', function () {
     data = this.data;
     options = this.options({
       growl: false
     });
     var done = this.async();
-    var stop = function(success, server, phantomjs){
-      if(server){
+    var stop = function (success, server, phantomjs) {
+      if (server) {
         server.kill();
         grunt.verbose.writeln('buster-server stopped');
       }
-      if(phantomjs){
+      if (phantomjs) {
         phantomjs.kill();
         grunt.verbose.writeln('phantomjs stopped');
       }
       done(success);
     };
 
-    if(shouldRunServer()){
+    if (shouldRunServer()) {
       runBusterServer().then(
-        function(server){
+        function (server) {
           runPhantomjs().then(
-            function(phantomjs){
+            function (phantomjs) {
               runBusterTest().then(
-                function(){
+                function () {
                   stop(null, server, phantomjs);
                 },
-                function(){
+                function () {
                   stop(false, server, phantomjs);
                 }
               );
             },
-            function(phantomjs) {
+            function (phantomjs) {
               stop(false, server, phantomjs);
             }
           );
         },
-        function(server){
+        function (server) {
           stop(false, server);
         }
       );
     }
     else {
       runBusterTest().then(
-        function(){
+        function () {
           done(null);
         },
-        function(){
+        function () {
           done(false);
         }
       );
