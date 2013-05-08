@@ -68,8 +68,8 @@ module.exports = function(grunt) {
   var busterNotFound = function(){
     grunt.log.errorlns(
           'In order for this task to work properly, Buster.JS must be ' +
-          'installed and in the system PATH (if you can run "buster" at' +
-          'the command line, this task should work).' +
+          'installed and in the system PATH (if you can run "buster" at ' +
+          'the command line, this task should work). ' +
           'To install Buster.JS, run `npm install -g buster`.'
         );
   };
