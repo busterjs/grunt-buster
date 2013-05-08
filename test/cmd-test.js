@@ -1,6 +1,9 @@
 var cp = require('child_process');
 var buster = require('buster');
+var path = require('path');
+
 var assert = buster.assert;
+var refute = buster.refute;
 
 var cmd = require('../tasks/buster/cmd');
 
@@ -49,7 +52,28 @@ buster.testCase('Exec', {
       assert.calledOnceWith(spy, 'some error');
     },
 
-    '// looks up in node_modules/.bin first': function () {
+    'calls fs.existsSync with node_modules path': function () {
+      var fs = require('fs');
+      var stub = this.stub(fs, 'existsSync');
+
+      cmd.findExecutable('ls');
+
+      assert.calledOnceWith(stub, path.join('node_modules', '.bin', 'ls'));
+    },
+
+    'calls callback with node_modules if it exists': function () {
+      var fs = require('fs');
+      this.stub(fs, 'existsSync', function () {
+        return true;
+      });
+
+      var execStub = this.stub(cp, 'exec');
+      var spy = this.spy();
+
+      cmd.findExecutable('ls', spy);
+
+      assert.calledOnceWith(spy, null, path.join('node_modules', '.bin', 'ls'));
+      refute.called(execStub);
     }
 
   },
