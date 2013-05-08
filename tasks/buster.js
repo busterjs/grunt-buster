@@ -43,7 +43,8 @@ module.exports = function (grunt) {
   var shouldRunServer = function () {
     var configFile = getConfigSection('test').config;
     if (!configFile) {
-      grunt.verbose.writeln('No buster configuration specified. Looking for buster.js...');
+      grunt.verbose.writeln(
+          'No buster configuration specified. Looking for buster.js...');
 
       if (fs.existsSync('buster.js')) {
         configFile = 'buster.js';
@@ -138,7 +139,8 @@ module.exports = function (grunt) {
         run.on('exit', function (code) {
           var text = '';
           if (output[output.length - 2]) {
-            text = output[output.length - 2].toString().split(', ').join('\n') + output[output.length - 1];
+            text = output[output.length - 2].toString().split(', ').join('\n') +
+              output[output.length - 1];
           }
           text = text.replace(/\u001b\[.*m/g, '').trim();
           if (code === 0) {
