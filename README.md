@@ -126,7 +126,7 @@ buster: {
 }
 ```
 
-The above config will for the `foo` target run `buster server` with the
+The above config will for the `foo` target run `buster test` with the
 argument `--config path/to/my/buster.js`, and run `buster server` with the
 argument `--port 1111`, with Growl notifications when the tests complete.
 
