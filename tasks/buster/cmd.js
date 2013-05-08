@@ -1,11 +1,16 @@
 var cp = require('child_process');
 var fs = require('fs');
+var os = require('os');
 var path = require('path');
 
 var exports = module.exports = {
 
   findExecutable: function (cmd, callback) {
     var candiate = path.join('node_modules', '.bin', cmd);
+
+    if (os.platform() === 'win32') {
+      candiate += '.cmd';
+    }
 
     callback = callback || function () {};
 

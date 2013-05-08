@@ -61,6 +61,20 @@ buster.testCase('Exec', {
       assert.calledOnceWith(stub, path.join('node_modules', '.bin', 'ls'));
     },
 
+    'adds ".cmd" for windows npm-shims': function () {
+      var fs = require('fs');
+      var stub = this.stub(fs, 'existsSync');
+      var os = require('os');
+
+      this.stub(os, 'platform', function () {
+        return 'win32';
+      });
+
+      cmd.findExecutable('ls');
+
+      assert.calledOnceWith(stub, path.join('node_modules', '.bin', 'ls.cmd'));
+    },
+
     'calls callback with node_modules if it exists': function () {
       var fs = require('fs');
       this.stub(fs, 'existsSync', function () {
