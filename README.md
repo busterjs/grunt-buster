@@ -173,6 +173,7 @@ npm start
 * Add `--server` option to `buster-test`
   (Thanks to [Andreas Köberle](https://github.com/eskimoblood))
 * Add support for locally installed versions of Buster.JS and PhantomJS
+  (Thanks to [Stein Martin Hustad](https://github.com/smh)
 
 #### v0.1.2
 
