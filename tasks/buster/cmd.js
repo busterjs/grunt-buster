@@ -3,14 +3,23 @@ var exports = module.exports = {
   exec: require('child_process').exec,
 
   findExecutable: function (cmd, callback) {
-    exports.exec('command -v ' + cmd, { env: process.env }, function (_, stdout) {
-      callback(null, stdout.split('\n')[0]);
+    exports.exec('command -v ' + cmd, { env: process.env }, function (error, stdout) {
+      if (error) {
+        callback(error);
+      } else {
+        callback(null, stdout.split('\n')[0]);
+      }
     });
   },
 
-  run: function (cmd, args) {
-    exports.findExecutable(cmd, function (_, path) {
-      exports.spawn(path, args);
+  run: function (cmd, args, callback) {
+    callback = callback || function () {};
+    exports.findExecutable(cmd, function (error, path) {
+      if (error) {
+        callback(error);
+      } else {
+        callback(null, exports.spawn(path, args));
+      }
     });
   },
 

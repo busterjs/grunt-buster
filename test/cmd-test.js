@@ -41,6 +41,15 @@ buster.testCase('Exec', {
       var spy = this.spy();
       cmd.findExecutable('ls', spy);
       assert.calledOnceWith(spy, null, '/foo/bar/ls');
+    },
+
+    'calls callback with error': function () {
+      this.stub(cmd, 'exec', function (_, __, callback) {
+        callback('some error');
+      });
+      var spy = this.spy();
+      cmd.findExecutable('ls', spy);
+      assert.calledOnceWith(spy, 'some error');
     }
 
   },
@@ -74,9 +83,13 @@ buster.testCase('Exec', {
       assert.calledOnceWith(this.spawnStub, 'ls', [ 1, 2, 3 ]);
     },
 
-    '// calls callback with error when .findExecutable fails': function () {
-      // cmd.run('ls', [], function (error, child) {
-      // });
+    'calls callback with error when .findExecutable fails': function () {
+      this.stub(cmd, 'findExecutable', function (_, callback) {
+        callback('some error');
+      });
+      var spy = this.spy();
+      cmd.run('ls', [], spy);
+      assert.calledOnceWith(spy, 'some error');
     }
 
   },
