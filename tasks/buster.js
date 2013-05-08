@@ -102,11 +102,11 @@ module.exports = function(grunt) {
         });
 
         server.stdout.on('data', function(data) {
-          process.stdout.write(data);
+          grunt.log.write(data);
         });
 
         server.stderr.on('data', function(data) {
-          process.stderr.write(data);
+          grunt.log.error(data);
         });
       }
 
