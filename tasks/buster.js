@@ -4,10 +4,11 @@ module.exports = function(grunt) {
       path = require('path'),
       when = require('when'),
       growl = require('./buster/growl.js'),
+      data,
       options;
 
   var getConfigSection = function(cmd){
-    return (grunt.config('buster') || {})[cmd] || {};
+    return (data || {})[cmd] || {};
   };
 
   var getArguments = function(cmd) {
@@ -195,7 +196,8 @@ module.exports = function(grunt) {
     return deferred.promise;
   };
 
-  grunt.registerTask('buster', 'Run Buster.JS tests.', function() {
+  grunt.registerMultiTask('buster', 'Run Buster.JS tests.', function() {
+    data = this.data;
     options = this.options({
       growl: false
     });

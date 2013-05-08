@@ -47,23 +47,25 @@ sudo npm install -g phantomjs
 ### Overview
 
 In your project's Gruntfile, add a section named `buster` to the data object
-passed into `grunt.initConfig()`:
+passed into `grunt.initConfig()`. You then need to define at least one target
+for `grunt buster` to have any effect.
+
+Example of a minimal working configuration:
 
 ``` js
 buster: {
-  test: {
-    config: 'path/to/my/buster.js'
-  },
-  server: {
-    port: 1111
-  }
+  foo: {}
 }
 ```
 
+The `buster` object can have an arbitrary number of targets, like `foo` in the
+above example. If you run `grunt buster`, all targets are executed. If you run
+`grunt buster:foo`, only the `foo` target is executed.
+
 ### Options
 
-This is entirely optional, as grunt-buster will use default values if none is
-specified.
+No options are needed to get started, as grunt-buster will use default values
+if none is specified.
 
 #### test
 
@@ -101,6 +103,36 @@ buster: {
 
 You should now get notifications whenever your test suite passes or fails.
 
+### Examples
+
+``` js
+buster: {
+  foo: {
+    test: {
+      config: 'path/to/my/buster.js'
+    },
+    server: {
+      port: 1111
+    }
+  },
+  bar: {
+    options: {
+      growl: false
+    }
+  },
+  options: {
+    growl: true
+  }
+}
+```
+
+The above config will for the `foo` target run `buster server` with the
+argument `--config path/to/my/buster.js`, and run `buster server` with the
+argument `--port 1111`, with Growl notifications when the tests complete.
+
+For the `bar` target, default configuration will be used, and Growl
+notifications will be turned off.
+
 
 ## Development
 
@@ -135,6 +167,9 @@ npm start
 * Declare a peer dependency on Grunt ~0.4.0
 * Made Growl notifications optional. You must now install the `growl` package
   from npm and set `options.growl` to `true` to get notifications.
+* Added support for Grunt multi-tasks. You must now define at least one target
+  for the `buster` task to have any work to do. See the above docs for a
+  minimal config examle.
 
 #### v0.1.2
 

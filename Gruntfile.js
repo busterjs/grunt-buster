@@ -10,6 +10,7 @@ module.exports = function(grunt) {
 
   grunt.initConfig({
     buster: {
+      all: {},
       options: {
         growl: true
       }
