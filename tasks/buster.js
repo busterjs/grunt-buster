@@ -12,9 +12,11 @@ module.exports = function(grunt) {
   };
 
   var getArguments = function(cmd) {
+    var port, url;
+
     if(cmd === 'phantomjs'){
-      var port = getConfigSection('server').port || 1111,
-          url = 'http://localhost:' + port + '/capture';
+      port = getConfigSection('server').port || 1111;
+      url = 'http://localhost:' + port + '/capture';
       return [__dirname + '/buster/phantom.js', url];
     }
 
@@ -22,8 +24,8 @@ module.exports = function(grunt) {
         config = getConfigSection(cmd);
      
     if(cmd === 'test'){
-      var port = getConfigSection('server').port || 1111;
-      args.push('--server', 'http://localhost:' + port + '/capture')
+      port = getConfigSection('server').port || 1111;
+      args.push('--server', 'http://localhost:' + port + '/capture');
     }
 
     for(var arg in config){
