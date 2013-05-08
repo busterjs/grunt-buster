@@ -7,7 +7,7 @@ var refute = buster.refute;
 
 var cmd = require('../tasks/buster/cmd');
 
-buster.testCase('Exec', {
+buster.testCase('Cmd', {
 
   '.findExecutable': {
 
