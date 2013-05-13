@@ -175,18 +175,18 @@ npm start
 * Add support for locally installed versions of Buster.JS and PhantomJS
   (Thanks to [Stein Martin Hustad](https://github.com/smh))
 
-#### v0.1.2
+#### v0.1.2 (2013-10-03)
 
 * Looks for buster.js in test/ and spec/ in addition to the root folder
 * Fixed corrupt error.png and ok.png (Thanks to [Paweł Maciejewski](https://github.com/fragphace))
 * Removed console non-printable characters from growl text message (Thanks to
   [Paweł Maciejewski](https://github.com/fragphace))
 
-#### v0.1.1
+#### v0.1.1 (2012-07-29)
 
 * Ensure that tests is not run until PhantomJS finished starting (thanks to
   [Harrison](https://github.com/Harrison))
 
-#### v0.1.0
+#### v0.1.0 (2012-07-24)
 
 * Initial release
