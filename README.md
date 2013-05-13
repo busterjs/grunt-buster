@@ -159,6 +159,10 @@ npm start
 
 ## Release history
 
+#### v0.2.1 (2013-05-13)
+
+* Fix broken URLs in package description
+
 #### v0.2.0 (2013-05-13)
 
 * Updated project URLs after move to busterjs organization on GitHub
