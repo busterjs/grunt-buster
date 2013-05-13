@@ -12,20 +12,18 @@ module.exports = function (grunt) {
   };
 
   var getArguments = function (cmd) {
-    var port, url;
+    var args = [];
+    var config = getConfigSection(cmd);
+    var serverPort = getConfigSection('server').port || 1111;
 
     if (cmd === 'phantomjs') {
-      port = getConfigSection('server').port || 1111;
-      url = 'http://localhost:' + port + '/capture';
-      return [__dirname + '/buster/phantom.js', url];
+      args.push(__dirname + '/buster/phantom.js');
+      args.push('http://localhost:' + serverPort + '/capture');
+      return args;
     }
 
-    var args = [],
-        config = getConfigSection(cmd);
-
     if (cmd === 'test') {
-      port = getConfigSection('server').port || 1111;
-      args.push('--server', 'http://localhost:' + port + '/capture');
+      args.push('--server', 'http://localhost:' + serverPort);
     }
 
     for (var arg in config) {
