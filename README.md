@@ -159,7 +159,7 @@ npm start
 
 ## Release history
 
-#### v0.2.0 (UNRELEASED)
+#### v0.2.0 (2013-05-13)
 
 * Updated project URLs after move to busterjs organization on GitHub
 * Require Node.js >= 0.8.0
