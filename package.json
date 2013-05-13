@@ -9,10 +9,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/grunt-buster/grunt-buster.git"
+    "url": "git://github.com/busterjs/grunt-buster.git"
   },
   "bugs": {
-    "url": "https://github.com/grunt-buster/grunt-buster/issues"
+    "url": "https://github.com/busterjs/grunt-buster/issues"
   },
   "license": "MIT",
   "main": "./tasks/buster.js",
