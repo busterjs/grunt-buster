@@ -112,11 +112,11 @@ module.exports = function (grunt) {
 
         run.stdout.on('data', function (data) {
           output.push(data);
-          process.stdout.write(data);
+          grunt.log.write(data);
         });
 
         run.stderr.on('data', function (data) {
-          process.stderr.write(data);
+          grunt.log.error(data);
         });
 
         run.on('exit', function (code) {
