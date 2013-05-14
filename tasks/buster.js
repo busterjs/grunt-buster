@@ -86,7 +86,7 @@ module.exports = function (grunt) {
         });
 
         server.stdout.on('data', function (data) {
-          grunt.log.write(data);
+          grunt.verbose.write(data);
         });
 
         server.stderr.on('data', function (data) {
