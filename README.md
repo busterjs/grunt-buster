@@ -179,7 +179,7 @@ npm start
 * Add support for locally installed versions of Buster.JS and PhantomJS
   (Thanks to [Stein Martin Hustad](https://github.com/smh))
 
-#### v0.1.2 (2013-10-03)
+#### v0.1.2 (2012-10-03)
 
 * Looks for buster.js in test/ and spec/ in addition to the root folder
 * Fixed corrupt error.png and ok.png (Thanks to [Paweł Maciejewski](https://github.com/fragphace))
