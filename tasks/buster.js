@@ -1,7 +1,6 @@
 module.exports = function (grunt) {
   var fs = require('fs'),
       path = require('path'),
-      when = require('when'),
       cmd = require('./buster/cmd'),
       growl = require('./buster/growl.js'),
       data,
@@ -64,108 +63,6 @@ module.exports = function (grunt) {
     }
   };
 
-  var busterNotFound = function () {
-    grunt.log.error(
-      'Buster.JS not found. Run `npm install buster` to install.');
-  };
-
-  var runBusterServer = function () {
-    var deferred = when.defer();
-
-    cmd.run('buster-server', getArguments('server'), function (error, server) {
-      if (error) {
-        busterNotFound();
-        deferred.reject();
-      } else {
-        server.stdout.once('data', function () {
-          deferred.resolve(server);
-        });
-
-        server.stderr.once('data', function () {
-          deferred.reject(server);
-        });
-
-        server.stdout.on('data', function (data) {
-          grunt.verbose.write(data);
-        });
-
-        server.stderr.on('data', function (data) {
-          grunt.log.error(data);
-        });
-      }
-
-      return deferred;
-    });
-
-    return deferred.promise;
-  };
-
-  var runBusterTest = function () {
-    var deferred = when.defer();
-
-    cmd.run('buster-test', getArguments('test'), function (error, run) {
-      if (error) {
-        busterNotFound();
-        deferred.reject();
-      } else {
-        var output = [];
-
-        run.stdout.on('data', function (data) {
-          output.push(data);
-          grunt.log.write(data);
-        });
-
-        run.stderr.on('data', function (data) {
-          grunt.log.error(data);
-        });
-
-        run.on('exit', function (code) {
-          var text = '';
-          if (output[output.length - 2]) {
-            text = output[output.length - 2].toString().split(', ').join('\n') +
-              output[output.length - 1];
-          }
-          text = text.replace(/\u001b\[.*m/g, '').trim();
-          if (code === 0) {
-            grunt.event.emit('buster:success', text);
-            deferred.resolve();
-          } else {
-            grunt.event.emit('buster:failure', text);
-            deferred.reject();
-          }
-        });
-      }
-    });
-
-    return deferred.promise;
-  };
-
-  var runPhantomjs = function () {
-    var deferred = when.defer();
-
-    cmd.run('phantomjs', getArguments('phantomjs'), function (error, server) {
-      if (error) {
-        grunt.log.error(
-          'PhantomJS not found. Run `npm install phantomjs` to install.');
-        deferred.reject();
-      } else {
-        server.stdout.on('data', function (data) {
-          grunt.verbose.writeln(data);
-        });
-
-        server.stderr.on('data', function (data) {
-          grunt.verbose.writeln(data);
-        });
-
-        server.stdout.once('data', function () {
-          deferred.resolve(server);
-        });
-      }
-    });
-
-    return deferred.promise;
-  };
-
   grunt.registerMultiTask('buster', 'Run Buster.JS tests.', function () {
     data = this.data;
     options = this.options({
@@ -190,11 +87,11 @@ module.exports = function (grunt) {
     };
 
     if (shouldRunServer()) {
-      runBusterServer().then(
+      cmd.runBusterServer(grunt, getArguments('server')).then(
         function (server) {
-          runPhantomjs().then(
+          cmd.runPhantomjs(grunt, getArguments('phantomjs')).then(
             function (phantomjs) {
-              runBusterTest().then(
+              cmd.runBusterTest(grunt, getArguments('test')).then(
                 function () {
                   stop(null, server, phantomjs);
                 },
@@ -213,7 +110,7 @@ module.exports = function (grunt) {
         }
       );
     } else {
-      runBusterTest().then(
+      cmd.runBusterTest(grunt, getArguments('test')).then(
         function () {
           done(null);
         },
