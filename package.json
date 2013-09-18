@@ -24,7 +24,7 @@
     "test": "grunt"
   },
   "devDependencies": {
-    "buster": "~0.6.12",
+    "buster": ">=0.7.6",
     "grunt": "~0.4.1",
     "grunt-cli": "~0.1.8",
     "grunt-contrib-jshint": "~0.4.3",
