@@ -20,7 +20,7 @@
     "node": ">= 0.8.0"
   },
   "scripts": {
-    "start": "grunt watch",
+    "start": "grunt --force default watch",
     "test": "grunt"
   },
   "devDependencies": {
