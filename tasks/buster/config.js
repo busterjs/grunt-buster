@@ -2,9 +2,11 @@ var fs = require('fs');
 var grunt = require('grunt');
 var path = require('path');
 
+
 exports.getConfigSection = function (cmd, config) {
   return (config || {})[cmd] || {};
 };
+
 
 exports.getArguments = function (cmd, config) {
   var args = [];
@@ -32,6 +34,7 @@ exports.getArguments = function (cmd, config) {
   }
   return args;
 };
+
 
 exports.shouldRunServer = function (configData) {
   var configFile = exports.getConfigSection('test', configData).config;
