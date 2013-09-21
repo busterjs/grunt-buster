@@ -11,7 +11,7 @@ grunt.registerMultiTask = function (name, desc, fn) {
 require('../tasks/buster')(grunt);
 
 
-var invokeTask = function (task, context) {
+var invokeTask = function (context) {
   context = context || {};
   context.async = context.async || function () {
     return function () {};
@@ -25,6 +25,14 @@ var invokeTask = function (task, context) {
 
 buster.testCase('grunt-buster task', {
 
+  setUp: function () {
+    this.deferStub = function (obj, attr) {
+      var stub = this.stub(obj, attr);
+      stub.deferred = when.defer();
+      return stub.returns(stub.deferred.promise);
+    };
+  },
+
   'is a function': function () {
     assert.isFunction(task);
   },
@@ -32,19 +40,32 @@ buster.testCase('grunt-buster task', {
   'calls cmd.runBusterTest with grunt': function () {
     var stub = this.stub(require('../tasks/buster/cmd'), 'runBusterTest');
     stub.returns(when.defer().promise);
-    invokeTask(task);
+    invokeTask();
     assert.calledOnceWith(stub, grunt);
   },
 
-  '// runs server and phantomjs if browser tests are defined': function () {
+  'runs server and phantomjs if browser tests are defined': function (done) {
+    var config = require('../tasks/buster/config');
+    this.stub(config, 'shouldRunServer').returns(true);
+
     var cmd = require('../tasks/buster/cmd');
-    var serverStub = this.stub(cmd, 'runBusterServer');
-    var phantomStub = this.stub(cmd, 'runPhantomjs');
-    var testStub = this.stub(cmd, 'runBusterTest');
-    invokeTask(task);
-    assert.calledOnce(serverStub);
-    assert.calledOnce(phantomStub);
-    assert.calledOnce(testStub);
+    var serverStub = this.deferStub(cmd, 'runBusterServer');
+    var phantomStub = this.deferStub(cmd, 'runPhantomjs');
+    var testStub = this.deferStub(cmd, 'runBusterTest');
+
+    invokeTask();
+
+    when.all([
+      serverStub.deferred.resolve(),
+      phantomStub.deferred.resolve(),
+      testStub.deferred.resolve()
+    ]).then(function () {
+      assert.callOrder(serverStub, phantomStub, testStub);
+      assert.calledOnce(serverStub);
+      assert.calledOnce(phantomStub);
+      assert.calledOnce(testStub);
+      done();
+    });
   }
 
 });
