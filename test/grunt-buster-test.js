@@ -37,7 +37,7 @@ buster.testCase('grunt-buster task', {
     assert.isFunction(task);
   },
 
-  'calls cmd.runBusterTest with grunt': function () {
+  'runs only tests when there are no browser tests defined': function () {
     var stub = this.stub(require('../tasks/buster/cmd'), 'runBusterTest');
     stub.returns(when.defer().promise);
     invokeTask();
