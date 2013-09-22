@@ -13,6 +13,7 @@ require('../tasks/buster')(grunt);
 
 var invokeTask = function (context) {
   context = context || {};
+  context.args = context.args || [];
   context.async = context.async || function () {
     return function () {};
   };
