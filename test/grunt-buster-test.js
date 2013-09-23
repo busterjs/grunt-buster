@@ -28,7 +28,6 @@ var invokeTask = function (context) {
 
 
 buster.testCase('grunt-buster task', {
-
   setUp: function () {
     this.deferStub = function (obj, attr) {
       var stub = this.stub(obj, attr);
@@ -41,33 +40,39 @@ buster.testCase('grunt-buster task', {
     assert.isFunction(task);
   },
 
-  'runs only tests when there are no browser tests defined': function () {
-    var stub = this.stub(cmd, 'runBusterTest');
-    stub.returns(when.defer().promise);
+  'runs only tests when there are no browser tests defined and calls stop': function (done) {
+    var stub = this.deferStub(cmd, 'runBusterTest');
+    this.stub(cmd, 'stop', function () {
+      assert.calledOnceWith(stub, grunt);
+      done();
+    });
     invokeTask();
-    assert.calledOnceWith(stub, grunt);
+    stub.deferred.resolve();
   },
 
-  'runs server and phantomjs if browser tests are defined': function (done) {
+  'runs server and phantomjs if browser tests are defined and calls stop': function (done) {
     this.stub(config, 'shouldRunServer').returns(true);
 
     var serverStub = this.deferStub(cmd, 'runBusterServer');
     var phantomStub = this.deferStub(cmd, 'runPhantomjs');
     var testStub = this.deferStub(cmd, 'runBusterTest');
 
-    invokeTask();
+    this.stub(cmd, 'stop', function (_, __, server, phantomjs) {
+      assert.equals(server, 'server');
+      assert.equals(phantomjs, 'phantomjs');
 
-    when.all([
-      serverStub.deferred.resolve(),
-      phantomStub.deferred.resolve(),
-      testStub.deferred.resolve()
-    ]).then(function () {
       assert.callOrder(serverStub, phantomStub, testStub);
       assert.calledOnce(serverStub);
       assert.calledOnce(phantomStub);
       assert.calledOnce(testStub);
+
       done();
     });
-  }
 
+    invokeTask();
+
+    serverStub.deferred.resolve('server');
+    phantomStub.deferred.resolve('phantomjs');
+    testStub.deferred.resolve();
+  }
 });

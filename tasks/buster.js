@@ -1,5 +1,6 @@
 module.exports = function (grunt) {
-  var cmd = require('./buster/cmd'),
+  var sequence = require('when/sequence'),
+      cmd = require('./buster/cmd'),
       config = require('./buster/config'),
       growl = require('./buster/growl.js'),
       options;
@@ -15,42 +16,32 @@ module.exports = function (grunt) {
     }
 
     var done = this.async();
-    var stop = function (success, server, phantomjs) {
+    var stop = function (success, results) {
+      var server = results[0];
+      var phantomjs = results[1];
       cmd.stop(grunt, done.bind(null, success), server, phantomjs);
     };
 
-    if (config.shouldRunServer(configData)) {
-      cmd.runBusterServer(grunt, config.getArguments('server', configData)).then(
-        function (server) {
-          cmd.runPhantomjs(grunt, config.getArguments('phantomjs', configData)).then(
-            function (phantomjs) {
-              cmd.runBusterTest(grunt, config.getArguments('test', configData)).then(
-                function () {
-                  stop(null, server, phantomjs);
-                },
-                function () {
-                  stop(false, server, phantomjs);
-                }
-              );
-            },
-            function (phantomjs) {
-              stop(false, server, phantomjs);
-            }
-          );
-        },
-        function (server) {
-          stop(false, server);
+    sequence([
+      function () {
+        if (config.shouldRunServer(configData)) {
+          return cmd.runBusterServer(grunt, config.getArguments('server', configData));
         }
-      );
-    } else {
-      cmd.runBusterTest(grunt, config.getArguments('test', configData)).then(
-        function () {
-          done(null);
-        },
-        function () {
-          done(false);
+        return null;
+      },
+      function () {
+        if (config.shouldRunServer(configData)) {
+          return cmd.runPhantomjs(grunt, config.getArguments('phantomjs', configData));
         }
-      );
-    }
+        return null;
+      },
+      function () {
+        return cmd.runBusterTest(grunt, config.getArguments('test', configData));
+      }
+    ]).then(function (results) {
+      stop(null, results);
+    }, function (results) {
+      stop(false, results);
+    });
   });
 };
