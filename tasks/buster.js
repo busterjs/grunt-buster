@@ -19,7 +19,7 @@ module.exports = function (grunt) {
     var stop = function (success, results) {
       var server = results[0];
       var phantomjs = results[1];
-      cmd.stop(grunt, server, phantomjs);
+      cmd.stop(server, phantomjs);
       done(success);
     };
 

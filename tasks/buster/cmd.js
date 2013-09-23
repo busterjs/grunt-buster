@@ -2,6 +2,7 @@ var cp = require('child_process');
 var fs = require('fs');
 var os = require('os');
 var path = require('path');
+var grunt = require('grunt');
 var when = require('when');
 
 
@@ -149,7 +150,7 @@ exports.runPhantomjs = function (grunt, args) {
 };
 
 
-exports.stop = function (grunt, server, phantomjs) {
+exports.stop = function (server, phantomjs) {
   if (server) {
     server.kill();
     grunt.verbose.writeln('buster-server stopped');

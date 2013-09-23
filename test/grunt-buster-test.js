@@ -57,8 +57,7 @@ buster.testCase('grunt-buster task', {
     var phantomStub = this.deferStub(cmd, 'runPhantomjs');
     var testStub = this.deferStub(cmd, 'runBusterTest');
 
-    this.stub(cmd, 'stop', function (grunt_, server, phantomjs) {
-      assert.same(grunt, grunt_);
+    this.stub(cmd, 'stop', function (server, phantomjs) {
       assert.equals(server, 'server');
       assert.equals(phantomjs, 'phantomjs');
 

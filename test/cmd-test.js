@@ -177,6 +177,20 @@ buster.testCase('Cmd', {
     var stub = this.stub(cmd, 'run');
     cmd.runPhantomjs();
     assert.calledOnceWith(stub, 'phantomjs');
+  },
+
+  '.stop': {
+    'kills server if defined': function () {
+      var server = { kill: this.spy() };
+      cmd.stop(server, null);
+      assert.calledOnce(server.kill);
+    },
+
+    'kills phantomjs if defined': function () {
+      var phantomjs = { kill: this.spy() };
+      cmd.stop(null,  phantomjs);
+      assert.calledOnce(phantomjs.kill);
+    }
   }
 
 });
