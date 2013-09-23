@@ -149,7 +149,7 @@ exports.runPhantomjs = function (grunt, args) {
 };
 
 
-exports.stop = function (grunt, done, server, phantomjs) {
+exports.stop = function (grunt, server, phantomjs) {
   if (server) {
     server.kill();
     grunt.verbose.writeln('buster-server stopped');
@@ -158,5 +158,4 @@ exports.stop = function (grunt, done, server, phantomjs) {
     phantomjs.kill();
     grunt.verbose.writeln('phantomjs stopped');
   }
-  done();
 };
