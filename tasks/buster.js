@@ -30,7 +30,7 @@ module.exports = function (grunt) {
         return null;
       },
       function () {
-        if (config.shouldRunServer(configData)) {
+        if (config.shouldRunPhantomjs(configData)) {
           return cmd.runPhantomjs(grunt, config.getArguments('phantomjs', configData));
         }
         return null;

@@ -61,3 +61,7 @@ exports.shouldRunServer = function (configData) {
     }
   }
 };
+
+exports.shouldRunPhantomjs = function (configData) {
+  return exports.shouldRunServer(configData);
+};
