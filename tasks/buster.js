@@ -16,15 +16,7 @@ module.exports = function (grunt) {
 
     var done = this.async();
     var stop = function (success, server, phantomjs) {
-      if (server) {
-        server.kill();
-        grunt.verbose.writeln('buster-server stopped');
-      }
-      if (phantomjs) {
-        phantomjs.kill();
-        grunt.verbose.writeln('phantomjs stopped');
-      }
-      done(success);
+      cmd.stop(grunt, done.bind(null, success), server, phantomjs);
     };
 
     if (config.shouldRunServer(configData)) {

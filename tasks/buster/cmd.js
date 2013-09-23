@@ -147,3 +147,16 @@ exports.runPhantomjs = function (grunt, args) {
 
   return deferred.promise;
 };
+
+
+exports.stop = function (grunt, done, server, phantomjs) {
+  if (server) {
+    server.kill();
+    grunt.verbose.writeln('buster-server stopped');
+  }
+  if (phantomjs) {
+    phantomjs.kill();
+    grunt.verbose.writeln('phantomjs stopped');
+  }
+  done();
+};
