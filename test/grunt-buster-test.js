@@ -3,6 +3,9 @@ var assert = buster.assert;
 
 var when = require('when');
 
+var cmd = require('../tasks/buster/cmd'),
+    config = require('../tasks/buster/config');
+
 var task;
 var grunt = require('grunt');
 grunt.registerMultiTask = function (name, desc, fn) {
@@ -39,17 +42,15 @@ buster.testCase('grunt-buster task', {
   },
 
   'runs only tests when there are no browser tests defined': function () {
-    var stub = this.stub(require('../tasks/buster/cmd'), 'runBusterTest');
+    var stub = this.stub(cmd, 'runBusterTest');
     stub.returns(when.defer().promise);
     invokeTask();
     assert.calledOnceWith(stub, grunt);
   },
 
   'runs server and phantomjs if browser tests are defined': function (done) {
-    var config = require('../tasks/buster/config');
     this.stub(config, 'shouldRunServer').returns(true);
 
-    var cmd = require('../tasks/buster/cmd');
     var serverStub = this.deferStub(cmd, 'runBusterServer');
     var phantomStub = this.deferStub(cmd, 'runPhantomjs');
     var testStub = this.deferStub(cmd, 'runBusterTest');
