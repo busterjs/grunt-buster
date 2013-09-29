@@ -14,7 +14,7 @@ exports.getArguments = function (cmd, config) {
   var serverPort = exports.getConfigSection('server', config).port || 1111;
 
   if (cmd === 'phantomjs') {
-    args.push(__dirname + '/buster/phantom.js');
+    args.push(__dirname + '/phantom.js');
     args.push('http://localhost:' + serverPort + '/capture');
     return args;
   }
