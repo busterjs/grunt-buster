@@ -44,18 +44,18 @@ exports.run = function (cmd, args, callback) {
 };
 
 
-var busterNotFound = function (grunt) {
+var busterNotFound = function () {
   grunt.log.error(
     'Buster.JS not found. Run `npm install buster` to install.');
 };
 
 
-exports.runBusterServer = function (grunt, args) {
+exports.runBusterServer = function (args) {
   var deferred = when.defer();
 
   exports.run('buster-server', args, function (error, server) {
     if (error) {
-      busterNotFound(grunt);
+      busterNotFound();
       deferred.reject();
     } else {
       server.stdout.once('data', function () {
@@ -82,12 +82,12 @@ exports.runBusterServer = function (grunt, args) {
 };
 
 
-exports.runBusterTest = function (grunt, args) {
+exports.runBusterTest = function (args) {
   var deferred = when.defer();
 
   exports.run('buster-test', args, function (error, run) {
     if (error) {
-      busterNotFound(grunt);
+      busterNotFound();
       deferred.reject();
     } else {
       var output = [];
@@ -123,7 +123,7 @@ exports.runBusterTest = function (grunt, args) {
 };
 
 
-exports.runPhantomjs = function (grunt, args) {
+exports.runPhantomjs = function (args) {
   var deferred = when.defer();
 
   exports.run('phantomjs', args, function (error, server) {

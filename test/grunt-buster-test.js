@@ -43,7 +43,7 @@ buster.testCase('grunt-buster task', {
   'runs only tests when there are no browser tests defined and calls stop': function (done) {
     var stub = this.deferStub(cmd, 'runBusterTest');
     this.stub(cmd, 'stop', function () {
-      assert.calledOnceWith(stub, grunt);
+      assert.calledOnce(stub);
       done();
     });
     invokeTask();

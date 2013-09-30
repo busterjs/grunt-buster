@@ -26,18 +26,18 @@ module.exports = function (grunt) {
     sequence([
       function () {
         if (config.shouldRunServer(configData)) {
-          return cmd.runBusterServer(grunt, config.getArguments('server', configData));
+          return cmd.runBusterServer(config.getArguments('server', configData));
         }
         return null;
       },
       function () {
         if (config.shouldRunPhantomjs(configData)) {
-          return cmd.runPhantomjs(grunt, config.getArguments('phantomjs', configData));
+          return cmd.runPhantomjs(config.getArguments('phantomjs', configData));
         }
         return null;
       },
       function () {
-        return cmd.runBusterTest(grunt, config.getArguments('test', configData));
+        return cmd.runBusterTest(config.getArguments('test', configData));
       }
     ]).then(function (results) {
       stop(null, results);
