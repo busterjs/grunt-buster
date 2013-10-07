@@ -15,6 +15,14 @@ module.exports = function (grunt) {
       growl.init(grunt);
     }
 
+    var runServer = config.shouldRunServer(configData);
+    var runPhantomjs = config.shouldRunPhantomjs(configData);
+
+    if (this.args.indexOf('test') !== -1) {
+      runServer = false;
+      runPhantomjs = false;
+    }
+
     var done = this.async();
     var stop = function (success, results) {
       var server = results[0];
@@ -25,13 +33,13 @@ module.exports = function (grunt) {
 
     sequence([
       function () {
-        if (config.shouldRunServer(configData)) {
+        if (runServer) {
           return cmd.runBusterServer(config.getArguments('server', configData));
         }
         return null;
       },
       function () {
-        if (config.shouldRunPhantomjs(configData)) {
+        if (runPhantomjs) {
           return cmd.runPhantomjs(config.getArguments('phantomjs', configData));
         }
         return null;

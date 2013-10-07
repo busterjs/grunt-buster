@@ -1,5 +1,6 @@
 var buster = require('buster');
 var assert = buster.assert;
+var refute = buster.refute;
 
 var when = require('when');
 
@@ -43,7 +44,7 @@ buster.testCase('grunt-buster task', {
   'runs only tests when there are no browser tests defined and calls stop': function (done) {
     var stub = this.deferStub(cmd, 'runBusterTest');
     this.stub(cmd, 'stop', function () {
-      assert.calledOnce(stub);
+      assert.calledOnceWith(stub);
       done();
     });
     invokeTask();
@@ -70,6 +71,27 @@ buster.testCase('grunt-buster task', {
     });
 
     invokeTask();
+
+    serverStub.deferred.resolve('server');
+    phantomStub.deferred.resolve('phantomjs');
+    testStub.deferred.resolve();
+  },
+
+  'runs just the tests with `test` argument': function (done) {
+    this.stub(config, 'shouldRunServer').returns(true);
+
+    var serverStub = this.deferStub(cmd, 'runBusterServer');
+    var phantomStub = this.deferStub(cmd, 'runPhantomjs');
+    var testStub = this.deferStub(cmd, 'runBusterTest');
+
+    this.stub(cmd, 'stop', function () {
+      refute.called(serverStub);
+      refute.called(phantomStub);
+      assert.calledOnce(testStub);
+      done();
+    });
+
+    invokeTask({ args: ['test'] });
 
     serverStub.deferred.resolve('server');
     phantomStub.deferred.resolve('phantomjs');
