@@ -160,3 +160,10 @@ exports.stop = function (server, phantomjs) {
     grunt.verbose.writeln('phantomjs stopped');
   }
 };
+
+exports.stopOnExit = function () {
+  var args = Array.prototype.slice.call(arguments);
+  process.on('exit', function () {
+    exports.stop.apply(null, args);
+  });
+};

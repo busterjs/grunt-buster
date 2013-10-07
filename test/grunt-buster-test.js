@@ -111,12 +111,12 @@ buster.testCase('grunt-buster task', {
 
     var serverStub = this.deferStub(cmd, 'runBusterServer');
     var phantomStub = this.deferStub(cmd, 'runPhantomjs');
-    var stopStub = this.stub(cmd, 'stop');
+    var stopStub = this.stub(cmd, 'stopOnExit');
 
     this.stub(context, 'done', function () {
       assert.calledOnce(serverStub);
       refute.called(phantomStub);
-      refute.called(stopStub);
+      assert.calledOnce(stopStub);
       done();
     });
 
@@ -136,17 +136,31 @@ buster.testCase('grunt-buster task', {
 
     var serverStub = this.deferStub(cmd, 'runBusterServer');
     var phantomStub = this.deferStub(cmd, 'runPhantomjs');
-    var stopStub = this.stub(cmd, 'stop');
+    var stopStub = this.stub(cmd, 'stopOnExit');
 
     this.stub(context, 'done', function () {
       refute.called(serverStub);
       assert.calledOnce(phantomStub);
-      refute.called(stopStub);
+      assert.calledOnce(stopStub);
       done();
     });
 
     invokeTask(context);
 
+    phantomStub.deferred.resolve('phantomjs');
+  },
+
+  'calls cmd.stopOnExit if using keepalive': function (done) {
+    var serverStub = this.deferStub(cmd, 'runBusterServer');
+    var phantomStub = this.deferStub(cmd, 'runPhantomjs');
+    this.stub(cmd, 'stopOnExit', function () {
+      assert(true, 'Getting here without timeout is a pass');
+      done();
+    });
+
+    invokeTask({ args: ['server', 'phantomjs'] });
+
+    serverStub.deferred.resolve('server');
     phantomStub.deferred.resolve('phantomjs');
   }
 });
