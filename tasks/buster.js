@@ -15,8 +15,22 @@ module.exports = function (grunt) {
       growl.init(grunt);
     }
 
+    var keepalive = false;
     var runServer = config.shouldRunServer(configData);
     var runPhantomjs = config.shouldRunPhantomjs(configData);
+    var runTests = true;
+
+    if (this.args.indexOf('server') !== -1) {
+      keepalive = true;
+      runServer = true;
+      runTests = false;
+    }
+
+    if (this.args.indexOf('phantomjs') !== -1) {
+      keepalive = true;
+      runPhantomjs = true;
+      runTests = false;
+    }
 
     if (this.args.indexOf('test') !== -1) {
       runServer = false;
@@ -27,7 +41,9 @@ module.exports = function (grunt) {
     var stop = function (success, results) {
       var server = results[0];
       var phantomjs = results[1];
-      cmd.stop(server, phantomjs);
+      if (!keepalive) {
+        cmd.stop(server, phantomjs);
+      }
       done(success);
     };
 
@@ -45,7 +61,10 @@ module.exports = function (grunt) {
         return null;
       },
       function () {
-        return cmd.runBusterTest(config.getArguments('test', configData));
+        if (runTests) {
+          return cmd.runBusterTest(config.getArguments('test', configData));
+        }
+        return null;
       }
     ]).then(function (results) {
       stop(null, results);

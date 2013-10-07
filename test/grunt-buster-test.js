@@ -17,9 +17,10 @@ require('../tasks/buster')(grunt);
 
 var invokeTask = function (context) {
   context = context || {};
+  var done = context.done || function () {};
   context.args = context.args || [];
   context.async = context.async || function () {
-    return function () {};
+    return done;
   };
   context.options = context.options || function () {
     return {};
@@ -78,6 +79,7 @@ buster.testCase('grunt-buster task', {
   },
 
   'runs just the tests with `test` argument': function (done) {
+    // Example: grunt buster:all:test
     this.stub(config, 'shouldRunServer').returns(true);
 
     var serverStub = this.deferStub(cmd, 'runBusterServer');
@@ -96,5 +98,55 @@ buster.testCase('grunt-buster task', {
     serverStub.deferred.resolve('server');
     phantomStub.deferred.resolve('phantomjs');
     testStub.deferred.resolve();
+  },
+
+  'runs the server without stopping if called with `server` arg': function (done) {
+    // Example: grunt buster:all:server
+    this.stub(config, 'shouldRunServer').returns(false);
+
+    var context = {
+      args: ['server'],
+      done: function () {}
+    };
+
+    var serverStub = this.deferStub(cmd, 'runBusterServer');
+    var phantomStub = this.deferStub(cmd, 'runPhantomjs');
+    var stopStub = this.stub(cmd, 'stop');
+
+    this.stub(context, 'done', function () {
+      assert.calledOnce(serverStub);
+      refute.called(phantomStub);
+      refute.called(stopStub);
+      done();
+    });
+
+    invokeTask(context);
+
+    serverStub.deferred.resolve('server');
+  },
+
+  'runs phantomjs without stopping if called with `phantomjs` arg': function (done) {
+    // Example: grunt buster:all:phantomjs
+    this.stub(config, 'shouldRunPhantomjs').returns(false);
+
+    var context = {
+      args: ['phantomjs'],
+      done: function () {}
+    };
+
+    var serverStub = this.deferStub(cmd, 'runBusterServer');
+    var phantomStub = this.deferStub(cmd, 'runPhantomjs');
+    var stopStub = this.stub(cmd, 'stop');
+
+    this.stub(context, 'done', function () {
+      refute.called(serverStub);
+      assert.calledOnce(phantomStub);
+      refute.called(stopStub);
+      done();
+    });
+
+    invokeTask(context);
+
+    phantomStub.deferred.resolve('phantomjs');
   }
 });
