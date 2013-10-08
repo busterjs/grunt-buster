@@ -150,17 +150,5 @@ buster.testCase('grunt-buster task', {
     phantomStub.deferred.resolve('phantomjs');
   },
 
-  'calls cmd.stopOnExit if using keepalive': function (done) {
-    var serverStub = this.deferStub(cmd, 'runBusterServer');
-    var phantomStub = this.deferStub(cmd, 'runPhantomjs');
-    this.stub(cmd, 'stopOnExit', function () {
-      assert(true, 'Getting here without timeout is a pass');
-      done();
-    });
-
-    invokeTask({ args: ['server', 'phantomjs'] });
-
-    serverStub.deferred.resolve('server');
-    phantomStub.deferred.resolve('phantomjs');
   }
 });
