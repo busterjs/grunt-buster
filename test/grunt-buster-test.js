@@ -79,7 +79,7 @@ buster.testCase('grunt-buster task', {
   },
 
   'runs just the tests with `test` argument': function (done) {
-    // Example: grunt buster:all:test
+    // Example: grunt buster::test
     this.stub(config, 'shouldRunServer').returns(true);
 
     var serverStub = this.deferStub(cmd, 'runBusterServer');
@@ -101,7 +101,7 @@ buster.testCase('grunt-buster task', {
   },
 
   'runs the server without stopping if called with `server` arg': function (done) {
-    // Example: grunt buster:all:server
+    // Example: grunt buster::server
     this.stub(config, 'shouldRunServer').returns(false);
 
     var context = {
@@ -130,7 +130,7 @@ buster.testCase('grunt-buster task', {
   },
 
   'runs phantomjs without stopping if called with `phantomjs` arg': function (done) {
-    // Example: grunt buster:all:phantomjs
+    // Example: grunt buster::phantomjs
     this.stub(config, 'shouldRunPhantomjs').returns(false);
 
     var context = {
@@ -158,5 +158,33 @@ buster.testCase('grunt-buster task', {
     testStub.deferred.resolve();
   },
 
+  'runs all tasks if all are passed as args': function (done) {
+    // Example: grunt buster::server:phantomjs:test
+    this.stub(config, 'shouldRunServer').returns(false);
+    this.stub(config, 'shouldRunPhantomjs').returns(false);
+
+    var context = {
+      args: ['server', 'phantomjs', 'test'],
+      done: function () {}
+    };
+
+    var serverStub = this.deferStub(cmd, 'runBusterServer');
+    var phantomStub = this.deferStub(cmd, 'runPhantomjs');
+    var testStub = this.deferStub(cmd, 'runBusterTest');
+    var stopStub = this.stub(cmd, 'stopOnExit');
+
+    this.stub(context, 'done', function () {
+      assert.calledOnce(serverStub);
+      assert.calledOnce(phantomStub);
+      assert.calledOnce(testStub);
+      assert.calledOnce(stopStub);
+      done();
+    });
+
+    invokeTask(context);
+
+    serverStub.deferred.resolve('server');
+    phantomStub.deferred.resolve('phantomjs');
+    testStub.deferred.resolve();
   }
 });

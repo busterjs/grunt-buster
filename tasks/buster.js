@@ -20,21 +20,24 @@ module.exports = function (grunt) {
     var runPhantomjs = config.shouldRunPhantomjs(configData);
     var runTests = true;
 
+    if (this.args.length) {
+      runServer = false;
+      runPhantomjs = false;
+      runTests = false;
+    }
+
     if (this.args.indexOf('server') !== -1) {
       keepalive = true;
       runServer = true;
-      runTests = false;
     }
 
     if (this.args.indexOf('phantomjs') !== -1) {
       keepalive = true;
       runPhantomjs = true;
-      runTests = false;
     }
 
     if (this.args.indexOf('test') !== -1) {
-      runServer = false;
-      runPhantomjs = false;
+      runTests = true;
     }
 
     var done = this.async();
