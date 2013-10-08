@@ -22,27 +22,11 @@ module.exports = function (grunt) {
     var runTests = true;
 
     if (this.args.length) {
-      runServer = false;
-      runPhantomjs = false;
-      runTests = false;
-    }
-
-    if (this.args.indexOf('server') !== -1) {
-      keepalive = true;
-      runServer = true;
-    }
-
-    if (this.args.indexOf('phantomjs') !== -1) {
-      keepalive = true;
-      runPhantomjs = true;
-    }
-
-    if (this.args.indexOf('test') !== -1) {
-      runTests = true;
-    }
-
-    if (this.args.indexOf('block') !== -1) {
-      block = true;
+      block = this.args.indexOf('block') !== -1;
+      runServer = this.args.indexOf('server') !== -1;
+      runPhantomjs = this.args.indexOf('phantomjs') !== -1;
+      keepalive = runServer || runPhantomjs;
+      runTests = this.args.indexOf('test') !== -1;
     }
 
     var done = this.async();
