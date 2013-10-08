@@ -111,11 +111,13 @@ buster.testCase('grunt-buster task', {
 
     var serverStub = this.deferStub(cmd, 'runBusterServer');
     var phantomStub = this.deferStub(cmd, 'runPhantomjs');
+    var testStub = this.deferStub(cmd, 'runBusterTest');
     var stopStub = this.stub(cmd, 'stopOnExit');
 
     this.stub(context, 'done', function () {
       assert.calledOnce(serverStub);
       refute.called(phantomStub);
+      refute.called(testStub);
       assert.calledOnce(stopStub);
       done();
     });
@@ -123,6 +125,8 @@ buster.testCase('grunt-buster task', {
     invokeTask(context);
 
     serverStub.deferred.resolve('server');
+    phantomStub.deferred.resolve('phantomjs');
+    testStub.deferred.resolve();
   },
 
   'runs phantomjs without stopping if called with `phantomjs` arg': function (done) {
@@ -136,18 +140,22 @@ buster.testCase('grunt-buster task', {
 
     var serverStub = this.deferStub(cmd, 'runBusterServer');
     var phantomStub = this.deferStub(cmd, 'runPhantomjs');
+    var testStub = this.deferStub(cmd, 'runBusterTest');
     var stopStub = this.stub(cmd, 'stopOnExit');
 
     this.stub(context, 'done', function () {
       refute.called(serverStub);
       assert.calledOnce(phantomStub);
+      refute.called(testStub);
       assert.calledOnce(stopStub);
       done();
     });
 
     invokeTask(context);
 
+    serverStub.deferred.resolve('server');
     phantomStub.deferred.resolve('phantomjs');
+    testStub.deferred.resolve();
   },
 
   }
