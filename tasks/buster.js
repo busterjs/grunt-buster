@@ -15,6 +15,7 @@ module.exports = function (grunt) {
       growl.init(grunt);
     }
 
+    var block = false;
     var keepalive = false;
     var runServer = config.shouldRunServer(configData);
     var runPhantomjs = config.shouldRunPhantomjs(configData);
@@ -40,6 +41,10 @@ module.exports = function (grunt) {
       runTests = true;
     }
 
+    if (this.args.indexOf('block') !== -1) {
+      block = true;
+    }
+
     var done = this.async();
     var stop = function (success, results) {
       var server = results[0];
@@ -51,7 +56,9 @@ module.exports = function (grunt) {
         cmd.stop(server, phantomjs);
       }
 
-      done(success);
+      if (!block) {
+        done(success);
+      }
     };
 
     sequence([

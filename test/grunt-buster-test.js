@@ -186,5 +186,33 @@ buster.testCase('grunt-buster task', {
     serverStub.deferred.resolve('server');
     phantomStub.deferred.resolve('phantomjs');
     testStub.deferred.resolve();
+  },
+
+  'does not call `done` when passing `block` as argument': function (done) {
+    // Example: grunt buster::server:block
+    this.stub(config, 'shouldRunServer').returns(false);
+
+    var context = {
+      args: ['server', 'block'],
+      done: function () {}
+    };
+
+    var serverStub = this.deferStub(cmd, 'runBusterServer');
+    var phantomStub = this.deferStub(cmd, 'runPhantomjs');
+    var testStub = this.deferStub(cmd, 'runBusterTest');
+    var stopStub = this.stub(cmd, 'stopOnExit');
+
+    var doneSpy = this.spy(context, 'done');
+    setTimeout(function () {
+      assert.calledOnce(stopStub);
+      refute.called(doneSpy);
+      done();
+    }, 0);
+
+    invokeTask(context);
+
+    serverStub.deferred.resolve('server');
+    phantomStub.deferred.resolve('phantomjs');
+    testStub.deferred.resolve();
   }
 });
