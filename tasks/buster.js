@@ -15,29 +15,54 @@ module.exports = function (grunt) {
       growl.init(grunt);
     }
 
+    var block = false;
+    var keepalive = false;
+    var runServer = config.shouldRunServer(configData);
+    var runPhantomjs = config.shouldRunPhantomjs(configData);
+    var runTests = true;
+
+    if (this.args.length) {
+      block = this.args.indexOf('block') !== -1;
+      runServer = this.args.indexOf('server') !== -1;
+      runPhantomjs = this.args.indexOf('phantomjs') !== -1;
+      keepalive = runServer || runPhantomjs;
+      runTests = this.args.indexOf('test') !== -1;
+    }
+
     var done = this.async();
     var stop = function (success, results) {
       var server = results[0];
       var phantomjs = results[1];
-      cmd.stop(server, phantomjs);
-      done(success);
+
+      if (keepalive) {
+        cmd.stopOnExit(server, phantomjs);
+      } else {
+        cmd.stop(server, phantomjs);
+      }
+
+      if (!block) {
+        done(success);
+      }
     };
 
     sequence([
       function () {
-        if (config.shouldRunServer(configData)) {
+        if (runServer) {
           return cmd.runBusterServer(config.getArguments('server', configData));
         }
         return null;
       },
       function () {
-        if (config.shouldRunPhantomjs(configData)) {
+        if (runPhantomjs) {
           return cmd.runPhantomjs(config.getArguments('phantomjs', configData));
         }
         return null;
       },
       function () {
-        return cmd.runBusterTest(config.getArguments('test', configData));
+        if (runTests) {
+          return cmd.runBusterTest(config.getArguments('test', configData));
+        }
+        return null;
       }
     ]).then(function (results) {
       stop(null, results);
