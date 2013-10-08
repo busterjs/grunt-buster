@@ -191,6 +191,18 @@ buster.testCase('Cmd', {
       cmd.stop(null,  phantomjs);
       assert.calledOnce(phantomjs.kill);
     }
+  },
+
+  '.stopOnExit calls .stop with args on process.exit': function () {
+    var stopStub = this.stub(cmd, 'stop');
+    var processStub = this.stub(process, 'on');
+
+    cmd.stopOnExit('server', 'phantomjs');
+
+    assert.calledOnceWith(processStub, 'exit');
+    processStub.args[0][1]();
+
+    assert.calledOnceWith(stopStub, 'server', 'phantomjs');
   }
 
 });
