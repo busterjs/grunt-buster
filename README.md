@@ -135,9 +135,14 @@ notifications will be turned off.
 
 ## Running servers, tests and PhantomJS separately
 
-It is possible to start one or more Buster.JS servers, PhantomJS instances or individual Buster.JS test runs by passing Grunt arguments when invoking tasks.
+It is possible to start one or more Buster.JS servers, PhantomJS instances or
+individual Buster.JS test runs by passing Grunt arguments when invoking tasks.
 
-Grunt allow for command line arguments to be passed to multitasks, like so: `grunt task:subtask:argument1:argument2`. To pass arguments to, and execute all subtasks of a multitask, skip the subtask name: `grunt task::argument`. In `grunt-buster`, we use that to gain more granular control over which Buster.JS components are executed, as described in the next section.
+Grunt allow for command line arguments to be passed to multitasks, like so:
+`grunt task:subtask:argument1:argument2`. To pass arguments to, and execute all
+subtasks of a multitask, skip the subtask name: `grunt task::argument`. In
+`grunt-buster`, we use that to gain more granular control over which Buster.JS
+components are executed, as described in the next section.
 
 ### Start all configured Buster.JS servers
 
@@ -151,17 +156,23 @@ grunt buster::server
 grunt buster::phantomjs
 ```
 
-Note: Grunt will not block by default when passing in either or both of the server and phantomjs arguments. They are intended to be used in combination with blocking tasks like `grunt-contrib-watch`. If you do not want to run either of the two in combination with a watch command, you can supply the `block` argument:
+Note: Grunt will not block by default when passing in either or both of the
+server and phantomjs arguments. They are intended to be used in combination
+with blocking tasks like `grunt-contrib-watch`. If you do not want to run
+either of the two in combination with a watch command, you can supply the
+`block` argument:
 
 ```
 grunt buster::server:phantomjs:block
 ``` 
 
-This allows you to capture browsers manually before executing the tests separately (see below).
+This allows you to capture browsers manually before executing the tests
+separately (see below).
 
 ### Run tests
 
-Execute the tests only and not spawn neither a Buster.JS server nor PhantomJS, as they are assumed to be started manually in some other way.
+Execute the tests only and not spawn neither a Buster.JS server nor PhantomJS,
+as they are assumed to be started manually in some other way.
 
 ```
 grunt buster::test
@@ -194,7 +205,8 @@ npm start
 
 #### v0.3.0 (UNRELEASED)
 
-* Fix #9 - Allow for more granular control over `buster-server`, `PhantomJS` and `buster-test` execution
+* Fix #9 - Allow for more granular control over `buster-server`, `PhantomJS`
+  and `buster-test` execution
 * Only log buster-server output if Grunt is run with `verbose`
 
 #### v0.2.1 (2013-05-13)
