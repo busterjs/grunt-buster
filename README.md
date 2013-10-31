@@ -205,7 +205,7 @@ npm start
 
 ## Release history
 
-#### v0.3.0 (UNRELEASED)
+#### v0.3.0 (2013-10-31)
 
 * Fix #9 - Allow for more granular control over `buster-server`, `PhantomJS`
   and `buster-test` execution
