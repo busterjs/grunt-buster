@@ -30,8 +30,8 @@ buster.testCase('utils', {
         setTimeout(function () {
           assert.calledOnceWith(spy, [ 'foo' ]);
           done();
-        }, 0);
-      }, 0);
+        }, 10);
+      }, 10);
     },
 
     'accepts tasks as functions': function (done) {
@@ -65,8 +65,8 @@ buster.testCase('utils', {
         setTimeout(function () {
           assert.calledOnceWith(spy, [ 'foo' ]);
           done();
-        }, 0);
-      }, 0);
+        }, 10);
+      }, 10);
     },
 
     'does not evaluate second task before the first is resolved': function (done) {
@@ -95,9 +95,9 @@ buster.testCase('utils', {
             assert.calledOnceWith(spy, [ 'foo', 'bar' ]);
             assert.callOrder(stub1, stub2, spy);
             done();
-          }, 0);
-        }, 0);
-      }, 0);
+          }, 10);
+        }, 10);
+      }, 10);
     },
 
     'does not evaluate second task if the first is rejected': function (done) {
@@ -123,8 +123,8 @@ buster.testCase('utils', {
           refute.called(success);
           assert.calledOnceWith(failure, [ 'foo' ]);
           done();
-        }, 0);
-      }, 0);
+        }, 10);
+      }, 10);
     }
   }
 });
