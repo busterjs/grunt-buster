@@ -113,7 +113,7 @@ exports.runBusterTest = function (args) {
           deferred.resolve();
         } else {
           grunt.event.emit('buster:failure', text);
-          deferred.reject();
+          deferred.resolve();
         }
       });
     }
