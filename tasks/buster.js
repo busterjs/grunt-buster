@@ -1,5 +1,5 @@
 module.exports = function (grunt) {
-  var sequence = require('when/sequence'),
+  var sequence = require('./buster/utils').sequence,
       cmd = require('./buster/cmd'),
       config = require('./buster/config'),
       growl = require('./buster/growl.js'),
@@ -47,22 +47,19 @@ module.exports = function (grunt) {
 
     sequence([
       function () {
-        if (runServer) {
-          return cmd.runBusterServer(config.getArguments('server', configData));
-        }
-        return null;
+        return runServer ?
+          cmd.runBusterServer(config.getArguments('server', configData)) :
+          null;
       },
       function () {
-        if (runPhantomjs) {
-          return cmd.runPhantomjs(config.getArguments('phantomjs', configData));
-        }
-        return null;
+        return runPhantomjs ?
+          cmd.runPhantomjs(config.getArguments('phantomjs', configData)) :
+          null;
       },
       function () {
-        if (runTests) {
-          return cmd.runBusterTest(config.getArguments('test', configData));
-        }
-        return null;
+        return runTests ?
+          cmd.runBusterTest(config.getArguments('test', configData)) :
+          null;
       }
     ]).then(function (results) {
       stop(null, results);
