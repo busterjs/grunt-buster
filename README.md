@@ -207,7 +207,7 @@ npm start
 * Update the `Release history`
 * Update the `package.json` version number
 * Tag the release commit with correct version number
-* Push new release to `npm`
+* Push new release to `npm`: `npm publish`
 
 
 ## Release history
