@@ -202,8 +202,19 @@ Starting a watch loop listening to file changes and running the test suite:
 npm start
 ```
 
+#### Making releases
+
+* Update the `Release history`
+* Update the `package.json` version number
+* Tag the release commit with correct version number
+* Push new release to `npm`
+
 
 ## Release history
+
+#### v0.3.1 (2013-11-07)
+
+* Fix issue where failing tests make grunt-buster hang
 
 #### v0.3.0 (2013-10-31)
 
