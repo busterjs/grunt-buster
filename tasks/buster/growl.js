@@ -1,12 +1,17 @@
+var cleanText = function (text)
+{
+  return text.replace(/\u001b\[.*?m/g, '').trim();
+};
+
 var success = function (growl, text) {
-  growl(text, {
+  growl(cleanText(text), {
     title: 'Tests Passed',
     image: __dirname + '/ok.png'
   });
 };
 
 var failure = function (growl, text) {
-  growl(text, {
+  growl(cleanText(text), {
     title: 'Tests Failed',
     image: __dirname + '/error.png'
   });
