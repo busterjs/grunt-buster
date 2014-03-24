@@ -44,6 +44,23 @@ buster.testCase('Growl', {
     assert.match(growlSpy.firstCall.args[1], {
       title: 'Tests Failed'
     });
+  },
+
+  'cleans up colors': function () {
+    var growlSpy = this.spy();
+    this.stub(growl, 'requireGrowl', function () {
+      return growlSpy;
+    });
+    growl.init(grunt);
+
+    /* jshint -W100 */
+    /* jshint -W113 */
+    grunt.event.emit('buster:success', 'Results:\n[1m[32m  ✓ resultViewer should exist[0m\n');
+    assert.calledOnceWith(growlSpy, 'Results:\n  ✓ resultViewer should exist');
+
+    assert.match(growlSpy.firstCall.args[1], {
+      title: 'Tests Passed'
+    });
   }
 
 });
