@@ -3,9 +3,9 @@ var grunt = require('grunt');
 var when = require('when');
 var resolveBin = require('resolve-bin');
 
-exports.run = function (module, cmd, args, callback) {
+exports.run = function (moduleName, cmd, args, callback) {
   callback = callback || function () {};
-  resolveBin(module, { executable: cmd }, function (error, path) {
+  resolveBin(moduleName, { executable: cmd }, function (error, path) {
     if (error) {
       callback(error);
     } else {
