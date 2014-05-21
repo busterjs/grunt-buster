@@ -18,7 +18,7 @@ buster.testCase('Cmd', {
     'calls .spawn with resolved binary (via node) and passes correct arguments': function (done) {
       var spawnStub = this.spawnStub;
       cmd.run('buster', 'buster-test', [ 1, 2, 3 ], function () {
-        assert.calledOnceWith(spawnStub, 'node', [ path.resolve(__dirname, '../node_modules/buster/bin/buster-test'), 1, 2, 3 ], {
+        assert.calledOnceWith(spawnStub, process.execPath, [ path.resolve(__dirname, '../node_modules/buster/bin/buster-test'), 1, 2, 3 ], {
           env: process.env,
           setsid: true
         });

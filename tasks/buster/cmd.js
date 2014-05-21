@@ -10,7 +10,7 @@ exports.run = function (module, cmd, args, callback) {
       callback(error);
     } else {
       args.unshift(path);
-      callback(null, cp.spawn('node', args, {
+      callback(null, cp.spawn(process.execPath, args, {
         env: process.env,
         setsid: true
       }));
