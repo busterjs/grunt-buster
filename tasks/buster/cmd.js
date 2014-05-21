@@ -1,41 +1,16 @@
 var cp = require('child_process');
-var fs = require('fs');
-var os = require('os');
-var path = require('path');
 var grunt = require('grunt');
 var when = require('when');
+var resolveBin = require('resolve-bin');
 
-
-exports.findExecutable = function (cmd, callback) {
-  var candidate = path.join('node_modules', '.bin', cmd);
-
-  if (os.platform() === 'win32') {
-    candidate += '.cmd';
-  }
-
+exports.run = function (module, cmd, args, callback) {
   callback = callback || function () {};
-
-  if (fs.existsSync(candidate)) {
-    callback(null, candidate);
-  } else {
-    cp.exec('command -v ' + cmd, { env: process.env }, function (error, stdout) {
-      if (error) {
-        callback(error);
-      } else {
-        callback(null, stdout.split('\n')[0]);
-      }
-    });
-  }
-};
-
-
-exports.run = function (cmd, args, callback) {
-  callback = callback || function () {};
-  exports.findExecutable(cmd, function (error, path) {
+  resolveBin(module, { executable: cmd }, function (error, path) {
     if (error) {
       callback(error);
     } else {
-      callback(null, cp.spawn(path, args, {
+      args.unshift(path);
+      callback(null, cp.spawn('node', args, {
         env: process.env,
         setsid: true
       }));
@@ -53,24 +28,24 @@ var busterNotFound = function () {
 exports.runBusterServer = function (args) {
   var deferred = when.defer();
 
-  exports.run('buster-server', args, function (error, server) {
+  exports.run('buster', 'buster-server', args, function (error, serverProcess) {
     if (error) {
       busterNotFound();
       deferred.reject();
     } else {
-      server.stdout.once('data', function () {
-        deferred.resolve(server);
+      serverProcess.stdout.once('data', function () {
+        deferred.resolve(serverProcess);
       });
 
-      server.stderr.once('data', function () {
-        deferred.reject(server);
+      serverProcess.stderr.once('data', function () {
+        deferred.reject(serverProcess);
       });
 
-      server.stdout.on('data', function (data) {
+      serverProcess.stdout.on('data', function (data) {
         grunt.verbose.write(data);
       });
 
-      server.stderr.on('data', function (data) {
+      serverProcess.stderr.on('data', function (data) {
         grunt.log.error(data);
       });
     }
@@ -85,23 +60,23 @@ exports.runBusterServer = function (args) {
 exports.runBusterTest = function (args) {
   var deferred = when.defer();
 
-  exports.run('buster-test', args, function (error, run) {
+  exports.run('buster', 'buster-test', args, function (error, runnerProcess) {
     if (error) {
       busterNotFound();
       deferred.reject();
     } else {
       var output = [];
 
-      run.stdout.on('data', function (data) {
+      runnerProcess.stdout.on('data', function (data) {
         output.push(data);
         grunt.log.write(data);
       });
 
-      run.stderr.on('data', function (data) {
+      runnerProcess.stderr.on('data', function (data) {
         grunt.log.error(data);
       });
 
-      run.on('exit', function (code) {
+      runnerProcess.on('exit', function (code) {
         var text = '';
         if (output[output.length - 2]) {
           text = output[output.length - 2].toString().split(', ').join('\n') +
@@ -125,22 +100,22 @@ exports.runBusterTest = function (args) {
 exports.runPhantomjs = function (args) {
   var deferred = when.defer();
 
-  exports.run('phantomjs', args, function (error, server) {
+  exports.run('phantomjs', 'phantomjs', args, function (error, phantomProcess) {
     if (error) {
       grunt.log.error(
         'PhantomJS not found. Run `npm install phantomjs` to install.');
       deferred.reject();
     } else {
-      server.stdout.on('data', function (data) {
+      phantomProcess.stdout.on('data', function (data) {
         grunt.verbose.writeln(data);
       });
 
-      server.stderr.on('data', function (data) {
+      phantomProcess.stderr.on('data', function (data) {
         grunt.verbose.writeln(data);
       });
 
-      server.stdout.once('data', function () {
-        deferred.resolve(server);
+      phantomProcess.stdout.once('data', function () {
+        deferred.resolve(phantomProcess);
       });
     }
   });
