@@ -27,11 +27,12 @@
     "buster": ">=0.7.6",
     "grunt": "~0.4.1",
     "grunt-cli": "~0.1.8",
-    "grunt-contrib-jshint": "~0.4.3",
+    "grunt-contrib-jshint": "~0.10.0",
     "grunt-contrib-watch": "~0.4.0"
   },
   "dependencies": {
-    "when": "~2.0.0"
+    "when": "~2.0.0",
+    "resolve-bin": "~0.3.0"
   },
   "peerDependencies": {
     "grunt": "~0.4.0"
