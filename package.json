@@ -35,6 +35,7 @@
     "resolve-bin": "~0.3.0"
   },
   "peerDependencies": {
+    "buster": ">=0.7.x",
     "grunt": "~0.4.0"
   },
   "keywords": [
