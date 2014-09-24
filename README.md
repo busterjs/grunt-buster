@@ -212,6 +212,12 @@ npm start
 
 ## Release history
 
+#### v0.3.2 (2014-09-24)
+
+* Use `resolve-bin` to find `buster` and `phantomjs` executables
+* Add `buster` as a peer dependency
+* Clean escape characters in Growl
+
 #### v0.3.1 (2013-11-07)
 
 * Fix issue where failing tests make grunt-buster hang
