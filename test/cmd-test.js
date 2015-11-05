@@ -26,10 +26,20 @@ buster.testCase('Cmd', {
       });
     },
 
+    'calls callback with results when a global binary found': function (done) {
+      var spawnStub = this.spawnStub;
+      cmd.run('node', 'node', [ 1, 2, 3 ], function (err) {
+        assert.isNull(err);
+        // node is the only executable I can trust to be in actual PATH - I just dont' know that path, but there should definitely be no error
+        assert.calledOnce(spawnStub);
+        done();
+      });
+    },
+
     'calls callback with error when resolve-bin fails': function (done) {
       cmd.run('no-such-module', 'no-such-file', [], function (err, actualHandle) {
         refute.isNull(err);
-        assert.match(err.message, 'cannot find');
+        assert.match(err.message, 'not found');
         refute(actualHandle);
         done();
       });
