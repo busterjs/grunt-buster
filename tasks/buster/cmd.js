@@ -2,10 +2,21 @@ var cp = require('child_process');
 var grunt = require('grunt');
 var when = require('when');
 var resolveBin = require('resolve-bin');
+var which = require('which');
+
+var findExecutable = function (moduleName, cmd, cb) {
+  resolveBin(moduleName, {executable:cmd}, function (error, path) {
+    if (error) { // failed to find in [global/local] node_modules - fallback to PATH
+      which(cmd, cb);
+    } else {
+      cb(null, path);
+    }
+  });
+};
 
 exports.run = function (moduleName, cmd, args, callback) {
   callback = callback || function () {};
-  resolveBin(moduleName, { executable: cmd }, function (error, path) {
+  findExecutable(moduleName, cmd, function (error, path) {
     if (error) {
       callback(error);
     } else {
@@ -103,7 +114,7 @@ exports.runPhantomjs = function (args) {
   exports.run('phantomjs', 'phantomjs', args, function (error, phantomProcess) {
     if (error) {
       grunt.log.error(
-        'PhantomJS not found. Run `npm install phantomjs` to install.');
+        'PhantomJS not found. Run `npm install [-g] phantomjs` to install.');
       deferred.reject();
     } else {
       phantomProcess.stdout.on('data', function (data) {
