@@ -17,27 +17,27 @@
   "license": "MIT",
   "main": "./tasks/buster.js",
   "engines": {
-    "node": ">= 0.10"
+    "node": ">= 4"
   },
   "scripts": {
     "start": "grunt --force default watch",
     "test": "grunt"
   },
   "devDependencies": {
-    "buster": ">=0.7.6",
-    "grunt": "^0.4.1",
-    "grunt-cli": "^0.1.8",
-    "grunt-contrib-jshint": "^0.11.3",
-    "grunt-contrib-watch": "^0.6.1"
+    "buster": "0.7.x",
+    "grunt": "0.4.x",
+    "grunt-cli": "0.1.x",
+    "grunt-contrib-jshint": "0.11.x",
+    "grunt-contrib-watch": "0.6.x"
   },
   "dependencies": {
-    "resolve-bin": "^0.3.0",
-    "when": "^3.7.4",
-    "which": "^1.2.0"
+    "resolve-bin": "0.3.x",
+    "when": "3.x",
+    "which": "1.x"
   },
   "peerDependencies": {
     "buster": ">=0.7.6",
-    "grunt": "~0.4.0"
+    "grunt": ">=0.4.0"
   },
   "keywords": [
     "gruntplugin",
