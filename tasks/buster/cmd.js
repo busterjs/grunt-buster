@@ -1,4 +1,4 @@
-var cp = require('child_process');
+var cp = require('cross-spawn-async');
 var grunt = require('grunt');
 var when = require('when');
 var resolveBin = require('resolve-bin');
