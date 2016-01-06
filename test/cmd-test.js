@@ -1,4 +1,4 @@
-var cp = require('child_process');
+var cp = require('cross-spawn-async');
 var buster = require('buster');
 var path = require('path');
 
