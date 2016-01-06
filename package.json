@@ -1,7 +1,7 @@
 {
   "name": "grunt-buster",
   "description": "Grunt task for running Buster.JS tests in Node.js or headless in PhantomJS",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "homepage": "https://github.com/busterjs/grunt-buster",
   "author": {
     "name": "Thomas Pedersen",
