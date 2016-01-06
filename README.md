@@ -1,4 +1,7 @@
-# grunt-buster [![Build Status](https://travis-ci.org/busterjs/grunt-buster.png?branch=master)](https://travis-ci.org/busterjs/grunt-buster)
+# grunt-buster
+
+[![Build status](https://secure.travis-ci.org/busterjs/grunt-buster.png?branch=master)](http://travis-ci.org/busterjs/grunt-buster)
+[![Build status](https://ci.appveyor.com/api/projects/status/github/busterjs/grunt-buster?branch=master&svg=true)](https://ci.appveyor.com/project/dominykas/grunt-buster)
 
 > [Grunt](http://gruntjs.com/) task for running
 > [Buster.JS](http://busterjs.org/) tests in [Node.js](http://nodejs.org/) or
@@ -212,27 +215,40 @@ npm start
 
 ## Release history
 
-#### v0.3.2 (2014-09-24)
+#### v0.4.2 (2016-Jan-06)
+
+* Using `cross-spawn-async` so that a correct executable is resolved on Windows
+
+#### v0.4.1 (2015-Nov-10)
+
+* Cleaning up redundant project settings
+
+#### v0.4.0 (2015-Nov-10)
+
+* Try to use an executable in the path, if an npm package for it not found
+* BREAKING: added an engine requirement (node LTS) in `package.json` 
+
+#### v0.3.2 (2014-Sep-24)
 
 * Use `resolve-bin` to find `buster` and `phantomjs` executables
 * Add `buster` as a peer dependency
 * Clean escape characters in Growl
 
-#### v0.3.1 (2013-11-07)
+#### v0.3.1 (2013-Nov-07)
 
 * Fix issue where failing tests make grunt-buster hang
 
-#### v0.3.0 (2013-10-31)
+#### v0.3.0 (2013-Oct-31)
 
 * Fix #9 - Allow for more granular control over `buster-server`, `PhantomJS`
   and `buster-test` execution
 * Only log buster-server output if Grunt is run with `verbose`
 
-#### v0.2.1 (2013-05-13)
+#### v0.2.1 (2013-May-13)
 
 * Fix broken URLs in package description
 
-#### v0.2.0 (2013-05-13)
+#### v0.2.0 (2013-May-13)
 
 * Updated project URLs after move to busterjs organization on GitHub
 * Require Node.js >= 0.8.0
@@ -248,18 +264,18 @@ npm start
 * Add support for locally installed versions of Buster.JS and PhantomJS
   (Thanks to [Stein Martin Hustad](https://github.com/smh))
 
-#### v0.1.2 (2012-10-03)
+#### v0.1.2 (2012-Oct-03)
 
 * Looks for buster.js in test/ and spec/ in addition to the root folder
 * Fixed corrupt error.png and ok.png (Thanks to [Paweł Maciejewski](https://github.com/fragphace))
 * Removed console non-printable characters from growl text message (Thanks to
   [Paweł Maciejewski](https://github.com/fragphace))
 
-#### v0.1.1 (2012-07-29)
+#### v0.1.1 (2012-Jul-29)
 
 * Ensure that tests is not run until PhantomJS finished starting (thanks to
   [Harrison](https://github.com/Harrison))
 
-#### v0.1.0 (2012-07-24)
+#### v0.1.0 (2012-Jul-24)
 
 * Initial release
